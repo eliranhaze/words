@@ -2,10 +2,14 @@ import requests
 import time
 
 from BeautifulSoup import BeautifulSoup
+from Queue import Queue
 
 from fetch import fetch
 
 class Source(object):
+
+    def __init__(self):
+        pass
 
     def urls(self):
         feed = fetch(self.FEED_URL, verify=False)
@@ -14,14 +18,14 @@ class Source(object):
     def _get_links(self, feed_soup):
         return [a.text for a in feed_soup.findAll('guid')]
 
-    def gen_articles(self):
+    def get_articles(self):
         for url in self.urls():
             try:
                 soup = BeautifulSoup(fetch(url, verify=False).content)
                 title = soup.findAll('title')[0].text
                 yield self._trim(url), title, self.extract(soup)
             except requests.exceptions.TooManyRedirects:
-                time.sleep(3)
+                time.sleep(2)
 
     def _trim(self, url):
         return url.replace('http://','').replace('https://','')

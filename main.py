@@ -12,7 +12,7 @@ def main():
     result = []
     erred = []
     for source in all_sources():
-        for url, title, text in source.gen_articles():
+        for url, title, text in source.get_articles():
             try:
                 result.append((url, title, num_words(words, text)))
                 sys.stdout.write('got %d articles (current: %s)           \r' % (len(result), source.__class__.__name__))
