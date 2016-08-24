@@ -1,5 +1,7 @@
 import sys
 
+from datetime import datetime
+
 from sources import all_sources
 from words import get_words, num_words
 
@@ -23,10 +25,15 @@ def main():
     print
     print 'sorting results'
     result.sort(key=lambda x: -x[2])
-    print 'RESULT'
-    for url, title, num in result:
-        if num > 0:
-            print num, title[:20]+'.', url
+
+    print 'writing results'
+    outfile = 'results_%s.out' % datetime.now().strftime('%d%m%y')
+    with open(outfile, 'w') as out:
+        for url, title, num in result:
+            if num > 0:
+                out.write('%s %s %s\n' % (num, title, url))
+
+    print 'results written to:', outfile
 
     if erred:
         print 'errs'
