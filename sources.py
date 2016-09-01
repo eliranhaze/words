@@ -13,7 +13,7 @@ class Source(object):
 
     def urls(self):
         feed = fetch(self.FEED_URL, verify=False)
-        return self._get_links(BeautifulSoup(feed.content, 'html5lib'))
+        return self._get_links(BeautifulSoup(feed.content))
 
     def _get_links(self, feed_soup):
         return [a.text for a in feed_soup.findAll('guid')]
@@ -21,8 +21,8 @@ class Source(object):
     def get_articles(self):
         for url in self.urls():
             try:
-                soup = BeautifulSoup(fetch(url, verify=False).content, 'html5lib')
-                title = soup.findAll('title')[0].text
+                soup = BeautifulSoup(fetch(url, verify=False).content)
+                title = soup.find('title').text
                 yield self._trim(url), title, self.extract(soup)
             except requests.exceptions.TooManyRedirects:
                 time.sleep(2)
@@ -92,4 +92,3 @@ class DailyNous(Source):
 
 def all_sources():
     return [s() for s in Source.__subclasses__()]
-
