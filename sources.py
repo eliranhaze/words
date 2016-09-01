@@ -31,13 +31,19 @@ class Source(object):
         return url.replace('http://','').replace('https://','')
 
     def extract(self, soup):
-        return ''.join(p.text for p in soup.findAll('p') if len(p.text) > 100)
+        return ''.join(p.text for p in self._main_element(soup).findAll('p') if len(p.text) > 50)
+
+    def _main_element(self, soup):
+        return soup
 
 class NewYorker(Source):
     FEED_URL = 'http://www.newyorker.com/feed/everything'
 
     def extract(self, soup):
-        return soup.findAll('div', attrs={'class': 'articleBody'})[0].text
+        try:
+            return soup.findAll('div', attrs={'class': 'articleBody'})[0].text
+        except:
+            return ''
 
 class TheGuardian(Source):
     FEED_URL = 'https://www.theguardian.com/uk/rss'
@@ -48,8 +54,17 @@ class NyTimes(Source):
 class NyBooks(Source):
     FEED_URL = 'http://feeds.feedburner.com/nybooks'
 
+    def _main_element(self, soup):
+        return soup
+
 class TheAtlantic(Source):
     FEED_URL = 'http://www.theatlantic.com/feed/all/'
+
+    def _main_element(self, soup):
+        try:
+            return soup.findAll('div', attrs={'class': 'article-body'})[0]
+        except:
+            return soup
 
     def _get_links(self, feed_soup):
         return [l.get('href') for l in feed_soup.findAll('link')]
