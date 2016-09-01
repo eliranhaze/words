@@ -1,7 +1,7 @@
 import requests
 import time
 
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 from Queue import Queue
 
 from fetch import fetch
@@ -13,7 +13,7 @@ class Source(object):
 
     def urls(self):
         feed = fetch(self.FEED_URL, verify=False)
-        return self._get_links(BeautifulSoup(feed.content))
+        return self._get_links(BeautifulSoup(feed.content, 'html5lib'))
 
     def _get_links(self, feed_soup):
         return [a.text for a in feed_soup.findAll('guid')]
@@ -21,7 +21,7 @@ class Source(object):
     def get_articles(self):
         for url in self.urls():
             try:
-                soup = BeautifulSoup(fetch(url, verify=False).content)
+                soup = BeautifulSoup(fetch(url, verify=False).content, 'html5lib')
                 title = soup.findAll('title')[0].text
                 yield self._trim(url), title, self.extract(soup)
             except requests.exceptions.TooManyRedirects:
@@ -51,11 +51,20 @@ class TheGuardian(Source):
 class NyTimes(Source):
     FEED_URL = 'http://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml'
 
+    def _main_element(self, soup):
+        try:
+            return soup.findAll('article', attrs={'id': 'story'})[0]
+        except:
+            return soup
+
 class NyBooks(Source):
     FEED_URL = 'http://feeds.feedburner.com/nybooks'
 
     def _main_element(self, soup):
-        return soup
+        try:
+            return soup.findAll('article', attrs={'class': 'article'})[0]
+        except:
+            return soup
 
 class TheAtlantic(Source):
     FEED_URL = 'http://www.theatlantic.com/feed/all/'
