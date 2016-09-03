@@ -3,7 +3,7 @@ import sys
 from datetime import datetime
 
 from sources import all_sources
-from words import num_words
+from words import full_report
 
 def main():
 
@@ -13,7 +13,7 @@ def main():
     for source in all_sources():
         for url, title, text in source.get_articles():
             try:
-                result.append((url, title, num_words(text, title=url)))
+                result.append((url, title, full_report(text)))
                 sys.stdout.write('got %d articles (current: %s)           \r' % (len(result), source.__class__.__name__))
                 sys.stdout.flush()
             except Exception, e:
@@ -21,18 +21,23 @@ def main():
 
     print
     print 'sorting results'
-    result.sort(key=lambda x: -x[2])
+    result.sort(key=lambda x: -len(x[2].found))
 
     print 'writing results'
     outfile = 'results_%s.out' % datetime.now().strftime('%d%m%y_%H%M')
     with open(outfile, 'w') as out:
-        for url, title, num in result:
-            if num > 0:
+        for url, title, report in result:
+            if report.found:
+                num = len(report.found)
+                pct = report.found_percent
+                rtime = report.reading_time
+                def write(title):
+                    out.write('%d %.2f %s %s %s\n' % (num, pct, rtime, title, url))
                 try:
                     try:
-                        out.write('%s %s %s\n' % (num, title, url))
+                        write(title)
                     except UnicodeEncodeError:
-                        out.write('%s ... %s\n' % (num, url))
+                        write('...')
                 except Exception, e:
                     erred.append((url, e))
 
