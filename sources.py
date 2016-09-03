@@ -12,14 +12,17 @@ class Source(object):
         pass
 
     def urls(self):
-        feed = fetch(self.FEED_URL, verify=False)
-        return self._get_links(BeautifulSoup(feed.content))
+        url_list = []
+        for feed_url in self.FEEDS:
+            feed = fetch(feed_url, verify=False)
+            url_list.extend(self._get_links(BeautifulSoup(feed.content)))
+        return set(url_list)
 
     def _get_links(self, feed_soup):
         return [a.text for a in feed_soup.findAll('guid')]
 
     def get_articles(self):
-        for url in self.urls():
+        for url in self._filter(self.urls()):
             try:
                 soup = BeautifulSoup(fetch(url, verify=False).content)
                 title = soup.find('title').text
@@ -36,8 +39,19 @@ class Source(object):
     def _main_element(self, soup):
         return soup
 
+    def _filter(self, urls):
+        return urls
+
 class NewYorker(Source):
-    FEED_URL = 'http://www.newyorker.com/feed/everything'
+    FEEDS = [
+        'http://www.newyorker.com/feed/everything',
+        'http://www.newyorker.com/feed/articles',
+        'http://www.newyorker.com/feed/culture',
+        'http://www.newyorker.com/feed/humor',
+        'http://www.newyorker.com/feed/books',
+        'http://www.newyorker.com/feed/tech',
+        'http://www.newyorker.com/feed/business',
+    ]
 
     def extract(self, soup):
         try:
@@ -46,10 +60,26 @@ class NewYorker(Source):
             return ''
 
 class TheGuardian(Source):
-    FEED_URL = 'https://www.theguardian.com/uk/rss'
+    FEEDS = [
+        'https://www.theguardian.com/uk/rss',
+        'https://www.theguardian.com/world/rss',
+        'https://www.theguardian.com/uk/culture/rss',
+        'https://www.theguardian.com/education/rss',
+        'https://www.theguardian.com/science/rss',
+    ]
 
 class NyTimes(Source):
-    FEED_URL = 'http://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml'
+    FEEDS = [
+        'http://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml',
+        'http://rss.nytimes.com/services/xml/rss/nyt/World.xml',
+        'http://rss.nytimes.com/services/xml/rss/nyt/US.xml',
+        'http://rss.nytimes.com/services/xml/rss/nyt/Education.xml',
+        'http://rss.nytimes.com/services/xml/rss/nyt/Science.xml',
+        'http://rss.nytimes.com/services/xml/rss/nyt/Environment.xml',
+        'http://rss.nytimes.com/services/xml/rss/nyt/Space.xml',
+        'http://rss.nytimes.com/services/xml/rss/nyt/Health.xml',
+        'http://rss.nytimes.com/services/xml/rss/nyt/Arts.xml',
+    ]
 
     def _main_element(self, soup):
         try:
@@ -58,7 +88,9 @@ class NyTimes(Source):
             return soup
 
 class NyBooks(Source):
-    FEED_URL = 'http://feeds.feedburner.com/nybooks'
+    FEEDS = [
+        'http://feeds.feedburner.com/nybooks',
+    ]
 
     def _main_element(self, soup):
         try:
@@ -67,7 +99,15 @@ class NyBooks(Source):
             return soup
 
 class TheAtlantic(Source):
-    FEED_URL = 'http://www.theatlantic.com/feed/all/'
+    FEEDS = [
+        'http://www.theatlantic.com/feed/all/',
+        'http://www.theatlantic.com/feed/best-of/',
+        'http://www.theatlantic.com/feed/channel/politics/',
+        'http://www.theatlantic.com/feed/channel/entertainment/',
+        'http://www.theatlantic.com/feed/channel/international/',
+        'http://www.theatlantic.com/feed/channel/science/',
+        'http://www.theatlantic.com/feed/channel/education/',
+    ]
 
     def _main_element(self, soup):
         try:
@@ -81,14 +121,35 @@ class TheAtlantic(Source):
     def _trim(self, url):
         return super(TheAtlantic, self)._trim(url).replace('/?utm_source=feed', '')
 
+    def _filter(self, urls):
+        return [u for u in urls if '/notes/' not in u]
+
 class TheEconomist(Source):
-    FEED_URL = 'http://www.economist.com/feeds/print-sections/all/all.xml'
+    FEEDS = [
+        'http://www.economist.com/feeds/print-sections/all/all.xml',
+        'http://www.economist.com/sections/business-finance/rss.xml',
+        'http://www.economist.com/sections/economics/rss.xml',
+        'http://www.economist.com/sections/science-technology/rss.xml',
+        'http://www.economist.com/sections/culture/rss.xml',
+        'http://www.economist.com/sections/united-states/rss.xml',
+        'http://www.economist.com/sections/middle-east-africa/rss.xml',
+        'http://www.economist.com/sections/international/rss.xml',
+    ]
 
 class _3AM(Source):
-    FEED_URL = 'http://www.3ammagazine.com/3am/feed/'
+    FEEDS = [
+        'http://www.3ammagazine.com/3am/feed/',
+        'http://www.3ammagazine.com/3am/index/buzzwords/feed/',
+        'http://www.3ammagazine.com/3am/index/interviews/feed/',
+        'http://www.3ammagazine.com/3am/index/fiction/feed/',
+        'http://www.3ammagazine.com/3am/index/criticism/feed/',
+        'http://www.3ammagazine.com/3am/index/nonfiction/feed/',
+    ]
 
 class DailyNous(Source):
-    FEED_URL = 'http://dailynous.com/feed/'
+    FEEDS = [
+        'http://dailynous.com/feed/',
+    ]
 
 def all_sources():
     return [s() for s in Source.__subclasses__()]
