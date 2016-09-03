@@ -1,6 +1,8 @@
 import re
 
 WORDFILE = 'word_list'
+WPM = 120
+
 PRINT_WORDS = False
 
 def _wordify(string):
@@ -42,13 +44,34 @@ def num_words(text, title=None):
 
 def full_report(text):
     text_words = _text_words(text)
-    unique_text_words = set(text_words)
     found = find_words(text_words)
-    unique_found = set(found)
-    return dict(
-        num_text = len(text_words),
-        num_unique_text = len(unique_text_words),
-        num_found = len(found),
-        num_unique_found = len(unique_found),
-        found_percent = 100.*len(found)/len(text_words),
-    )
+    return Report(text_words, found)
+
+class Report(object):
+
+    def __init__(self, text_words, found):
+        self.text_words = text_words
+        self.unique_text_words = set(text_words)
+        self.found = found
+        self.unique_found = set(found)
+
+    @property
+    def found_percent(self):
+        return 100.*len(self.found)/len(self.text_words)
+
+    @property
+    def reading_minutes(self):
+        return len(self.text_words) * 1. / WPM
+
+    @property
+    def reading_time(self):
+        m = self.reading_minutes
+        h, m = divmod(m, 60)
+        return '%dh %dm' % (h, m)
+    
+    def _print(self):
+        print '--- report ---'
+        print '- word count: %d (%d unique)' % (len(self.text_words), len(self.unique_text_words))
+        print '- found: %d (%d unique)' % (len(self.found), len(self.unique_found))
+        print '- pct: %.2f%%' % self.found_percent
+        print '- reading time: %s' % self.reading_time

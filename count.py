@@ -24,9 +24,7 @@ def main():
         text = open(args.file).read()
 
     report = full_report(text)
-    print '--- report ---'
-    for k, v in report.iteritems():
-        print '%s: %s' % (k, v)
+    report._print()
 
 if __name__ == '__main__':
     main()
