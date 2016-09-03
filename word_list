@@ -18,7 +18,9 @@ adamant
 adjudicate
 admonish
 admonitory
+adroit
 adulterate
+adumbrate
 advocate
 aesthete
 aesthetic
@@ -46,10 +48,8 @@ anemic
 animosity
 anodyne
 anomalous
-anomaly
 antedated
 antic
-antipathy
 antiquated
 antithetical
 apathetic
@@ -210,6 +210,7 @@ compound
 concede
 conciliate
 conciliatory
+conclave
 concomitant
 condone
 conducive
@@ -262,7 +263,6 @@ daunt
 dearth
 debase
 debonair
-debunk
 decimation
 decorous
 decorum
@@ -359,6 +359,7 @@ eccentric
 eclectic
 economical
 edifying
+efface
 effervescent
 efficacious
 efficacy
@@ -370,9 +371,9 @@ elaborate
 elegiac
 elegy
 elicit
-elucidate
 elude
 elusive
+emaciate
 embellish
 embroiled
 embryonic
@@ -402,7 +403,6 @@ equitable
 equivocal
 equivocate
 eradicate
-err
 errant
 erratic
 ersatz
@@ -424,7 +424,6 @@ exalt
 exasperate
 excoriate
 excruciating
-nettle
 exculpate
 execrate
 exegesis
@@ -464,7 +463,6 @@ fete
 fickle
 finagle
 firebrand
-flag
 fledgling
 fleece
 flippant
@@ -528,6 +526,7 @@ harangue
 harried
 haughty
 hauteur
+heath
 hector
 hedge
 hegemony
@@ -584,6 +583,7 @@ impugn
 impute
 inanity
 inarticulate
+inaugurate
 incense
 incessant
 inchoate
@@ -595,6 +595,7 @@ incontrovertible
 incorporate
 incorrigible
 incumbent
+incursion
 indecorous
 indeterminate
 indict
@@ -607,6 +608,7 @@ indolent
 industrious
 ineffable
 ineluctable
+inept
 inequity
 inert
 inexorable
@@ -630,6 +632,7 @@ insolvent
 insouciance
 insufferable
 insularity
+insurgent
 intermittent
 internecine
 intimate
@@ -687,6 +690,7 @@ limpid
 lionize
 litany
 loath
+lore
 loquacious
 lugubrious
 luminous
@@ -698,6 +702,7 @@ magnanimous
 maladroit
 malady
 malapropism
+malarkey
 malevolent
 malfeasance
 malingerer
@@ -709,7 +714,6 @@ maudlin
 maunder
 maverick
 mawkish
-maxim
 meander
 melee
 mellifluous
@@ -721,6 +725,7 @@ mesmerize
 meteoric
 meticulous
 mettlesome
+mire
 misattribute
 misconstrue
 miscreant
@@ -731,6 +736,7 @@ modicum
 mollify
 moot
 morass
+moratorium
 mordant
 moribund
 morose
@@ -742,8 +748,6 @@ muted
 myopic
 myriad
 nadir
-negate
-negligible
 neophyte
 nettle
 nettlesome
@@ -754,7 +758,6 @@ obdurate
 objurgate
 obliging
 oblique
-obscure
 obsequious
 obstinate
 obstreperous
@@ -777,6 +780,7 @@ palaver
 palimpsest
 panacea
 panache
+pandemic
 panegyric
 paragon
 pariah
@@ -784,7 +788,7 @@ parochial
 parsimonious
 partisan
 parvenu
-pastoral
+pastor
 pate
 patent
 pathological
@@ -848,11 +852,12 @@ porous
 portentous
 posit
 powwow
-pragmatic
 preamble
 precarious
 precedent
+precipice
 precipitate
+precipitation
 precipitous
 preclude
 precocious
@@ -900,9 +905,8 @@ punctilious
 pundit
 pungent
 pyrrhic
+quagmire
 quail
-qualified
-qualify
 qualm
 quandary
 querulous
@@ -944,6 +948,7 @@ remiss
 remonstrate
 renege
 replete
+repose
 reprisal
 reproach
 reprobate
@@ -978,8 +983,11 @@ savvy
 schadenfreude
 scintillating
 screed
+scrumptious
+scruple
 scrupulous
 secrete
+sectarian
 sedulous
 self-effacing
 semblance
@@ -992,10 +1000,12 @@ shard
 simulacrum
 sinecure
 slapdash
+slog
 smattering
 smug
 snide
 snub
+solace
 solecism
 solicitous
 solicitude
@@ -1015,6 +1025,7 @@ staid
 stalwart
 staunch
 steadfast
+stealth
 stem
 stigma
 stint
@@ -1080,14 +1091,18 @@ transmute
 travail
 travesty
 treacherous
+tremulous
 trenchant
+trepidation
 tribulation
 trite
+trough
 truculence
 truculent
 truncate
 tumult
 turgid
+turmoil
 turpitude
 tyro
 umbrage
@@ -1118,7 +1133,6 @@ unwarranted
 upbraid
 urbane
 vacillate
-vacuous
 vanquish
 variance
 vaunted
