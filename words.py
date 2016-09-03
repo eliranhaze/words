@@ -50,4 +50,5 @@ def full_report(text):
         num_unique_text = len(unique_text_words),
         num_found = len(found),
         num_unique_found = len(unique_found),
+        found_percent = 100.*len(found)/len(text_words),
     )
