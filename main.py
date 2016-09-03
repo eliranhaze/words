@@ -3,7 +3,14 @@ import sys
 from datetime import datetime
 
 from sources import all_sources
-from words import full_report
+from words import full_report, _wordify
+
+def make_title(title):
+    max_size = 25
+    title = title.replace('  ',' ').replace('  ',' ')
+    if len(title) > max_size:
+        title = title[:max_size-3] + '...'
+    return title
 
 def main():
 
@@ -32,12 +39,13 @@ def main():
                 pct = report.found_percent
                 rtime = report.reading_time
                 def write(title):
-                    out.write('%d %.2f %s %s %s\n' % (num, pct, rtime, title, url))
+                    out.write('%d %.2f %s %s %s\n' % (num, pct, rtime, make_title(title), url))
                 try:
                     try:
                         write(title)
                     except UnicodeEncodeError:
-                        write('...')
+                        title = ' '.join([_wordify(w) for w in title.split()])
+                        write(title)
                 except Exception, e:
                     erred.append((url, e))
 
