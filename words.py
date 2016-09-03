@@ -21,11 +21,17 @@ def get_words():
 
 WORDS = get_words()
 
-def num_words(title, text):
-    text_words = [_wordify(s) for s in text.split()]
-    found = [w for w in text_words if w in WORDS]
+def _text_words(text):
+    return [_wordify(s) for s in text.split()]
 
-    if PRINT_WORDS:
+def find_words(text_words):
+    return [w for w in text_words if w in WORDS]
+
+def num_words(text, title=None):
+    text_words = _text_words(text)
+    found = find_words(text_words)
+
+    if PRINT_WORDS and title:
         with open(_wordify(title).replace('www','') + '.out', 'w') as out:
             for f in found:
                 out.write(f+'\n')
@@ -34,3 +40,14 @@ def num_words(title, text):
 
     return len(found)
 
+def full_report(text):
+    text_words = _text_words(text)
+    unique_text_words = set(text_words)
+    found = find_words(text_words)
+    unique_found = set(found)
+    return dict(
+        num_text = len(text_words),
+        num_unique_text = len(unique_text_words),
+        num_found = len(found),
+        num_unique_found = len(unique_found),
+    )

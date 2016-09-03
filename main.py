@@ -13,7 +13,7 @@ def main():
     for source in all_sources():
         for url, title, text in source.get_articles():
             try:
-                result.append((url, title, num_words(url, text)))
+                result.append((url, title, num_words(text, title=url)))
                 sys.stdout.write('got %d articles (current: %s)           \r' % (len(result), source.__class__.__name__))
                 sys.stdout.flush()
             except Exception, e:
