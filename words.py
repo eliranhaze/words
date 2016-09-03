@@ -1,7 +1,7 @@
 import re
 
 WORDFILE = 'word_list'
-WPM = 120
+WPM = 150
 
 PRINT_WORDS = False
 
