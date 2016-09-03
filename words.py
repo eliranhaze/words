@@ -18,7 +18,7 @@ def get_words():
         extras.append(word + ('d' if last == 'e' else 'ed'))
         extras.append(word + ('s' if last == 'e' else 'es'))
         extras.append(word + 'ly')
-        extras.append(word + 'ing')
+        extras.append((word[:-1] if last == 'e' else word)+ 'ing')
     return set(words + extras)
 
 WORDS = get_words()
