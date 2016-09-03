@@ -1,12 +1,13 @@
 import argparse
 
+import words
 from fetch import fetch
-from words import full_report
 
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--url', dest='url')
     parser.add_argument('--file', dest='file')
+    parser.add_argument('--out', dest='out')
     args = parser.parse_args()
     if not args.file and not args.url:
         print 'either --url or --file is required'
@@ -23,7 +24,12 @@ def main():
         print 'reading file', args.file
         text = open(args.file).read()
 
-    report = full_report(text)
+    if args.out:
+        print 'with output'
+        words.PRINT_WORDS = True
+        words.PRINT_OUT = args.out
+
+    report = words.full_report(text)
     report._print()
 
 if __name__ == '__main__':

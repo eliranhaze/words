@@ -4,6 +4,7 @@ WORDFILE = 'word_list'
 WPM = 130
 
 PRINT_WORDS = False
+PRINT_OUT = 'words.out'
 
 def _wordify(string):
     return re.sub('\W+', '', string).lower()
@@ -18,7 +19,11 @@ def get_words():
         extras.append(word + ('d' if last == 'e' else 'ed'))
         extras.append(word + ('s' if last == 'e' else 'es'))
         extras.append(word + 'ly')
-        extras.append((word[:-1] if last == 'e' else word)+ 'ing')
+        extras.append((word[:-1] if last == 'e' else word) + 'ing')
+        if last == 't':
+            extras.append(word[:-1] + 'ce')
+        elif word[-2:] == 'ce':
+            extras.append(word[:-2] + 't')
     return set(words + extras)
 
 WORDS = get_words()
@@ -75,3 +80,11 @@ class Report(object):
         print '- found: %d (%d unique)' % (len(self.found), len(self.unique_found))
         print '- pct: %.2f%%' % self.found_percent
         print '- reading time: %s' % self.reading_time
+
+        if PRINT_WORDS:
+            with open(PRINT_OUT, 'w') as out:
+                for f in self.found:
+                    out.write(f+'\n')
+                out.write('\n=== TEXT ===\n')
+                out.write(' '.join(self.text_words))
+
