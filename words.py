@@ -9,6 +9,9 @@ PRINT_OUT = 'words.out'
 def _wordify(string):
     return re.sub('\W+', '', string).lower()
 
+def _textify(text):
+    return re.sub('\W+', ' ', text).lower().split()
+
 def get_words():
     words = [_wordify(s) for s in open(WORDFILE).read().splitlines()]
     print 'read', len(words), 'words'
@@ -28,15 +31,11 @@ def get_words():
 
 WORDS = get_words()
 
-def _text_words(text):
-    text = re.sub('\W+', ' ', text)
-    return [_wordify(s) for s in text.split()]
-
 def find_words(text_words):
     return [w for w in text_words if w in WORDS]
 
 def num_words(text, title=None):
-    text_words = _text_words(text)
+    text_words = _textify(text)
     found = find_words(text_words)
 
     if PRINT_WORDS and title:
@@ -49,7 +48,7 @@ def num_words(text, title=None):
     return len(found)
 
 def full_report(text, save=True):
-    text_words = _text_words(text)
+    text_words = _textify(text)
     found = find_words(text_words)
     return Report(text_words, found, save)
 
