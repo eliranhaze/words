@@ -140,7 +140,7 @@ class TheEconomist(Source):
     ]
 
     def _trim(self, url):
-        return super(TheAtlantic, self)._trim(url).replace('?fsrc=rss', '')
+        return super(TheEconomist, self)._trim(url).replace('?fsrc=rss', '')
 
     def _filter(self, urls):
         return [u for u in urls if '/blogs/erasmus' not in u]
