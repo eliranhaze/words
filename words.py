@@ -29,6 +29,7 @@ def get_words():
 WORDS = get_words()
 
 def _text_words(text):
+    text = re.sub('\W+', ' ', text)
     return [_wordify(s) for s in text.split()]
 
 def find_words(text_words):
