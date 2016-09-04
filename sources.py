@@ -15,18 +15,21 @@ class Source(object):
         url_list = []
         for feed_url in self.FEEDS:
             feed = fetch(feed_url, verify=False)
-            url_list.extend(self._get_links(BeautifulSoup(feed.content)))
+            feed_soup = BeautifulSoup(feed.content, features='xml')
+            url_list.extend(self._get_links(feed_soup))
         return set(url_list)
 
     def _get_links(self, feed_soup):
-        return [a.text for a in feed_soup.findAll('guid')]
+        return [l.text for item in feed_soup.findAll('item') for l in item.findAll('link')]
 
     def get_articles(self):
         for url in self._filter(self.urls()):
             try:
-                soup = BeautifulSoup(fetch(url, verify=False).content)
-                title = soup.find('title').text
-                yield self._trim(url), title, self.extract(soup)
+                response = fetch(url, verify=False)
+                if response:
+                    soup = BeautifulSoup(response.content)
+                    title = soup.find('title').text
+                    yield self._trim(url), title, self.extract(soup)
             except requests.exceptions.TooManyRedirects:
                 time.sleep(2)
 
@@ -116,7 +119,7 @@ class TheAtlantic(Source):
             return soup
 
     def _get_links(self, feed_soup):
-        return [l.get('href') for l in feed_soup.findAll('link')]
+        return [l.get('href') for item in feed_soup.findAll('entry') for l in item.findAll('link')]
 
     def _trim(self, url):
         return super(TheAtlantic, self)._trim(url).replace('/?utm_source=feed', '')
@@ -135,6 +138,12 @@ class TheEconomist(Source):
         'http://www.economist.com/sections/middle-east-africa/rss.xml',
         'http://www.economist.com/sections/international/rss.xml',
     ]
+
+    def _trim(self, url):
+        return super(TheAtlantic, self)._trim(url).replace('?fsrc=rss', '')
+
+    def _filter(self, urls):
+        return [u for u in urls if '/blogs/erasmus' not in u]
 
 class _3AM(Source):
     FEEDS = [
