@@ -55,14 +55,14 @@ def full_report(text, save=True):
 class Report(object):
 
     def __init__(self, text_words, found, save=True):
-        unique_text_words = set(text_words)
         if save:
             self.text_words = text_words
-            self.unique_text_words = unique_text_words
+            self.unique_text_words = set(text_words)
+            self.num_unique_text_words = len(self.unique_text_words)
+            self.unique_found = set(found)
         self.num_text_words = len(text_words)
-        self.num_unique_text_words = len(unique_text_words)
         self.found = found
-        self.unique_found = set(found)
+        self.save = save
 
     @property
     def found_percent(self):
@@ -79,13 +79,15 @@ class Report(object):
         return '%dh %dm' % (h, m)
     
     def _print(self):
+        if not self.save:
+            return
         print '--- report ---'
         print '- word count: %d (%d unique)' % (self.num_text_words, self.num_unique_text_words)
         print '- found: %d (%d unique)' % (len(self.found), len(self.unique_found))
         print '- pct: %.2f%%' % self.found_percent
         print '- reading time: %s' % self.reading_time
 
-        if PRINT_WORDS and hasattr(self, 'text_words'):
+        if PRINT_WORDS:
             with open(PRINT_OUT, 'w') as out:
                 for f in self.found:
                     out.write(f+'\n')
