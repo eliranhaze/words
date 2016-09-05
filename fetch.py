@@ -16,4 +16,6 @@ def fetch(url, **kwargs):
         while True:
             return session.get(url, **kwargs)
     except requests.exceptions.ConnectionError:
-        time.sleep(2)
+        time.sleep(1)
+    except requests.exceptions.TooManyRedirects:
+        return

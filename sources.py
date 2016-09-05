@@ -15,8 +15,9 @@ class Source(object):
         url_list = []
         for feed_url in self.FEEDS:
             feed = fetch(feed_url, verify=False)
-            feed_soup = BeautifulSoup(feed.content, features='xml')
-            url_list.extend(self._get_links(feed_soup))
+            if feed:
+                feed_soup = BeautifulSoup(feed.content, features='xml')
+                url_list.extend(self._get_links(feed_soup))
         return set(url_list)
 
     def _get_links(self, feed_soup):
@@ -24,14 +25,11 @@ class Source(object):
 
     def get_articles(self):
         for url in self._filter(self.urls()):
-            try:
-                response = fetch(url, verify=False)
-                if response:
-                    soup = BeautifulSoup(response.content)
-                    title = soup.find('title').text
-                    yield self._trim(url), title, self.extract(soup)
-            except requests.exceptions.TooManyRedirects:
-                time.sleep(2)
+            response = fetch(url, verify=False)
+            if response:
+                soup = BeautifulSoup(response.content)
+                title = soup.find('title').text
+                yield self._trim(url), title, self.extract(soup)
 
     def _trim(self, url):
         return url.replace('http://','').replace('https://','')
