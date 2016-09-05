@@ -8,8 +8,9 @@ from fetch import fetch
 
 class Source(object):
 
-    def __init__(self):
-        pass
+    def __init__(self, feeds=None):
+        if feeds:
+            self.FEEDS = feeds
 
     def urls(self, from_date=None):
         url_list = []
@@ -34,8 +35,8 @@ class Source(object):
             response = fetch(url, verify=False)
             if response:
                 soup = BeautifulSoup(response.content)
-                title = soup.find('title').text
-                yield self._trim(url), title, self.extract(soup)
+                title = soup.find('title')
+                yield self._trim(url), title.text if title else '---', self.extract(soup)
 
     def _trim(self, url):
         return url.replace('http://','').replace('https://','')
