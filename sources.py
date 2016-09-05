@@ -1,8 +1,8 @@
-import requests
+import feedparser
 import time
 
 from bs4 import BeautifulSoup
-from Queue import Queue
+from datetime import datetime
 
 from fetch import fetch
 
@@ -11,20 +11,26 @@ class Source(object):
     def __init__(self):
         pass
 
-    def urls(self):
+    def urls(self, from_date=None):
         url_list = []
         for feed_url in self.FEEDS:
-            feed = fetch(feed_url, verify=False)
-            if feed:
-                feed_soup = BeautifulSoup(feed.content, features='xml')
-                url_list.extend(self._get_links(feed_soup))
+            feed = feedparser.parse(feed_url)
+            url_list.extend(self._get_links(feed, from_date))
         return set(url_list)
 
-    def _get_links(self, feed_soup):
-        return [l.text for item in feed_soup.findAll('item') for l in item.findAll('link')]
+    def _get_links(self, feed, from_date=None):
+        links = []
+        if feed:
+            for entry in feed['entries']:
+                if from_date:
+                    date = datetime.fromtimestamp(time.mktime(entry['published_parsed']))
+                    if date < from_date:
+                        continue
+                links.append(entry['link'])
+        return links
 
-    def get_articles(self):
-        for url in self._filter(self.urls()):
+    def get_articles(self, from_date=None):
+        for url in self._filter(self.urls(from_date)):
             response = fetch(url, verify=False)
             if response:
                 soup = BeautifulSoup(response.content)
@@ -50,10 +56,13 @@ class NewYorker(Source):
     FEEDS = [
         'http://www.newyorker.com/feed/everything',
         'http://www.newyorker.com/feed/articles',
+        'http://www.newyorker.com/feed/news',
         'http://www.newyorker.com/feed/culture',
         'http://www.newyorker.com/feed/humor',
         'http://www.newyorker.com/feed/books',
+        'http://www.newyorker.com/feed/books/page-turner',
         'http://www.newyorker.com/feed/tech',
+        'http://www.newyorker.com/feed/tech/elements',
         'http://www.newyorker.com/feed/business',
     ]
 
@@ -118,9 +127,6 @@ class TheAtlantic(Source):
             return soup.findAll('div', attrs={'class': 'article-body'})[0]
         except:
             return soup
-
-    def _get_links(self, feed_soup):
-        return [l.get('href') for item in feed_soup.findAll('entry') for l in item.findAll('link')]
 
     def _trim(self, url):
         return super(TheAtlantic, self)._trim(url).replace('/?utm_source=feed', '')

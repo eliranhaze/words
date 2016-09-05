@@ -1,7 +1,7 @@
 import argparse
 import sys
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from sources import get_sources
 from words import full_report, _wordify
@@ -15,11 +15,11 @@ def make_title(title):
         title = title[:max_size-3] + '...'
     return title
 
-def fetch_articles(sources):
+def fetch_articles(sources, from_date=None):
     result = []
     erred = []
     for source in sources:
-        for url, title, text in source.get_articles():
+        for url, title, text in source.get_articles(from_date):
             try:
                 result.append((url, title, full_report(text, save=False)))
                 sys.stdout.write('got %d articles (current: %s)           \r' % (len(result), source.__class__.__name__))
@@ -51,7 +51,7 @@ def write_output(result, erred):
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--sources', nargs='*', dest='sources')
-    parser.add_argument('--time', dest='time')
+    parser.add_argument('--hours', type=int, dest='hours')
     args = parser.parse_args()
     return args
 
@@ -60,14 +60,17 @@ def main():
     args = get_args()
 
     sources = get_sources(args.sources)
-    print 'fetching articles from %s' % ','.join([str(s) for s in sources])
-    result, erred = fetch_articles(sources)
+    from_date = (datetime.utcnow() - timedelta(hours=args.hours)) if args.hours else None
+
+    print 'fetching articles'
+    print 'sources: %s' % ','.join([str(s) for s in sources])
+    if from_date:
+        print 'since: %s utc' % from_date.strftime('%d-%m %H:%M')
+
+    result, erred = fetch_articles(sources, from_date)
 
     print
-    print 'sorting results'
     result.sort(key=lambda x: -len(x[2].found))
-
-    print 'writing results'
     outfile = write_output(result, erred)
     print 'results written to:', outfile
 
