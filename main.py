@@ -5,6 +5,8 @@ from datetime import datetime
 from sources import all_sources
 from words import full_report, _wordify
 
+OUTPUT_DIR = 'out'
+
 def make_title(title):
     max_size = 25
     title = title.replace('  ',' ').replace('  ',' ')
@@ -12,9 +14,7 @@ def make_title(title):
         title = title[:max_size-3] + '...'
     return title
 
-def main():
-
-    print 'fetching articles'
+def fetch_articles():
     result = []
     erred = []
     for source in all_sources():
@@ -25,13 +25,10 @@ def main():
                 sys.stdout.flush()
             except Exception, e:
                 erred.append((url, e))
+    return result, erred
 
-    print
-    print 'sorting results'
-    result.sort(key=lambda x: -len(x[2].found))
-
-    print 'writing results'
-    outfile = 'results_%s.out' % datetime.now().strftime('%d%m%y_%H%M')
+def write_output(result, erred):
+    outfile = '%s/results_%s.out' % (OUTPUT_DIR, datetime.now().strftime('%d%m%y_%H%M'))
     with open(outfile, 'w') as out:
         for url, title, report in result:
             if report.found:
@@ -48,7 +45,19 @@ def main():
                         write(title)
                 except Exception, e:
                     erred.append((url, e))
+    return outfile
 
+def main():
+
+    print 'fetching articles'
+    result, erred = fetch_articles()
+
+    print
+    print 'sorting results'
+    result.sort(key=lambda x: -len(x[2].found))
+
+    print 'writing results'
+    outfile = write_output(result, erred)
     print 'results written to:', outfile
 
     if erred:
