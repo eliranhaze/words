@@ -167,6 +167,11 @@ class DailyNous(Source):
         'http://dailynous.com/feed/',
     ]
 
+class LondonBooks(Source):
+    FEEDS = [
+        'http://cdn.lrb.co.uk/feeds/lrb',
+    ]
+
 def get_sources(sources=None):
     if sources:
         sources = [s.lower() for s in sources]
