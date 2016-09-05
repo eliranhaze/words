@@ -43,6 +43,9 @@ class Source(object):
     def _filter(self, urls):
         return urls
 
+    def __str__(self):
+        return self.__class__.__name__
+
 class NewYorker(Source):
     FEEDS = [
         'http://www.newyorker.com/feed/everything',
@@ -158,5 +161,10 @@ class DailyNous(Source):
         'http://dailynous.com/feed/',
     ]
 
-def all_sources():
-    return [s() for s in Source.__subclasses__()]
+def get_sources(sources=None):
+    if sources:
+        sources = [s.lower() for s in sources]
+        condition = lambda cls: cls.__name__.lower() in sources
+    else:
+        condition = lambda cls: True
+    return [s() for s in Source.__subclasses__() if condition(s)]

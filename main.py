@@ -1,8 +1,9 @@
+import argparse
 import sys
 
 from datetime import datetime
 
-from sources import all_sources
+from sources import get_sources
 from words import full_report, _wordify
 
 OUTPUT_DIR = 'out'
@@ -14,10 +15,10 @@ def make_title(title):
         title = title[:max_size-3] + '...'
     return title
 
-def fetch_articles():
+def fetch_articles(sources):
     result = []
     erred = []
-    for source in all_sources():
+    for source in sources:
         for url, title, text in source.get_articles():
             try:
                 result.append((url, title, full_report(text, save=False)))
@@ -47,10 +48,20 @@ def write_output(result, erred):
                     erred.append((url, e))
     return outfile
 
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--sources', nargs='*', dest='sources')
+    parser.add_argument('--time', dest='time')
+    args = parser.parse_args()
+    return args
+
 def main():
 
-    print 'fetching articles'
-    result, erred = fetch_articles()
+    args = get_args()
+
+    sources = get_sources(args.sources)
+    print 'fetching articles from %s' % ','.join([str(s) for s in sources])
+    result, erred = fetch_articles(sources)
 
     print
     print 'sorting results'
