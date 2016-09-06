@@ -82,6 +82,9 @@ class TheGuardian(Source):
         'https://www.theguardian.com/science/rss',
     ]
 
+    def _filter(self, urls):
+        return [u for u in urls if '/sport/live' not in u]
+
 class NyTimes(Source):
     FEEDS = [
         'http://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml',
