@@ -121,9 +121,14 @@ class TheAtlantic(Source):
         'http://www.theatlantic.com/feed/best-of/',
         'http://www.theatlantic.com/feed/channel/politics/',
         'http://www.theatlantic.com/feed/channel/entertainment/',
+        'http://www.theatlantic.com/feed/channel/technology/',
+        'http://www.theatlantic.com/feed/channel/health/',
+        'http://www.theatlantic.com/feed/channel/sexes/',
         'http://www.theatlantic.com/feed/channel/international/',
+        'http://www.theatlantic.com/feed/channel/national/',
         'http://www.theatlantic.com/feed/channel/science/',
         'http://www.theatlantic.com/feed/channel/education/',
+        'http://www.theatlantic.com/feed/channel/news/',
     ]
 
     def _main_element(self, soup):
