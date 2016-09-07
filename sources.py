@@ -181,6 +181,16 @@ class LondonBooks(Source):
         'http://cdn.lrb.co.uk/feeds/lrb',
     ]
 
+class LABooks(Source):
+    FEEDS = [
+        'https://lareviewofbooks.org/feed',
+        'http://feeds.feedburner.com/themarginaliareview/XRIC',
+        'http://avidly.lareviewofbooks.org/feed/',
+        'http://philosoplant.lareviewofbooks.org/?feed=rss2',
+        'http://shermanoaksreview.com/feed/',
+        'http://eephusmag.com/feed/',
+    ]
+
 def get_sources(sources=None):
     if sources:
         sources = [s.lower() for s in sources]
