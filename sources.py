@@ -65,6 +65,13 @@ class NewYorker(Source):
         'http://www.newyorker.com/feed/tech',
         'http://www.newyorker.com/feed/tech/elements',
         'http://www.newyorker.com/feed/business',
+        'http://www.newyorker.com/feed/collection/crime-and-punishment-in-the-archive',
+        'http://www.newyorker.com/feed/collection/profiles-from-the-archive',
+        'http://www.newyorker.com/feed/collection/nyc-in-the-archive',
+        'http://www.newyorker.com/feed/collection/school-days-in-the-archive',
+        'http://www.newyorker.com/feed/collection/creative-life-in-the-archive',
+        'http://www.newyorker.com/feed/collection/love-stories-from-the-archive',
+        'http://www.newyorker.com/feed/collection/directors-in-the-archive',
     ]
 
     def extract(self, soup):
