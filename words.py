@@ -1,6 +1,6 @@
 import re
 
-WORDFILE = 'word_list'
+WORDFILE = 'wlist'
 WPM = 130
 
 PRINT_WORDS = False
