@@ -198,6 +198,15 @@ class LABooks(Source):
         'http://eephusmag.com/feed/',
     ]
 
+class WashingtonPost(Source):
+    FEEDS = [
+        'http://feeds.washingtonpost.com/rss/politics',
+        'http://feeds.washingtonpost.com/rss/local',
+        'http://feeds.washingtonpost.com/rss/national',
+        'http://feeds.washingtonpost.com/rss/world', 
+        'http://feeds.washingtonpost.com/rss/business',
+    ]
+
 def get_sources(sources=None):
     if sources:
         sources = [s.lower() for s in sources]
