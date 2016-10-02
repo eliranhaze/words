@@ -207,6 +207,11 @@ class WashingtonPost(Source):
         'http://feeds.washingtonpost.com/rss/business',
     ]
 
+class Aeon(Source):
+    FEEDS = [
+        'https://aeon.co/feed.rss',
+    ]
+
 def get_sources(sources=None):
     if sources:
         sources = [s.lower() for s in sources]
