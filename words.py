@@ -2,6 +2,7 @@ import re
 
 WORDFILE = 'wlist'
 WPM = 130
+MAX_WORD_REPEAT = 3
 
 PRINT_WORDS = False
 PRINT_OUT = 'words.out'
@@ -32,20 +33,11 @@ def get_words():
 WORDS = get_words()
 
 def find_words(text_words):
-    return [w for w in text_words if w in WORDS]
-
-def num_words(text, title=None):
-    text_words = _textify(text)
-    found = find_words(text_words)
-
-    if PRINT_WORDS and title:
-        with open(_wordify(title).replace('www','') + '.out', 'w') as out:
-            for f in found:
-                out.write(f+'\n')
-            out.write('\n=== TEXT ===\n')
-            out.write(' '.join(text_words))
-
-    return len(found)
+    found = []
+    for w in text_words:
+        if w in WORDS and found.count(w) < MAX_WORD_REPEAT:
+            found.append(w)
+    return found
 
 def full_report(text, save=True):
     text_words = _textify(text)
