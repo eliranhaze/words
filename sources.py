@@ -111,6 +111,13 @@ class NyTimes(Source):
         except:
             return soup
 
+    def _filter(self, urls):
+        filtered = [
+            'theater/theater-listings',
+            'movies/movie-listings',
+        ]
+        return [u for u in urls if all(f not in u for f in filtered)]
+
 class NyBooks(Source):
     FEEDS = [
         'http://feeds.feedburner.com/nybooks',
