@@ -115,6 +115,7 @@ class NyTimes(Source):
         filtered = [
             'theater/theater-listings',
             'movies/movie-listings',
+            'museum-gallery-listings',
         ]
         return [u for u in urls if all(f not in u for f in filtered)]
 
