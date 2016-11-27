@@ -1,4 +1,5 @@
 import argparse
+from bs4 import BeautifulSoup
 
 import words
 from fetch import fetch
@@ -14,12 +15,16 @@ def get_args():
         exit()
     return args
 
+def textify_web_content(content):
+    soup = BeautifulSoup(content)
+    return ' '.join([p.text for p in soup.findAll('p')])
+
 def main():
 
     args = get_args()
     if args.url:
         print 'fetching text from', args.url
-        text = fetch(args.url).content
+        text = textify_web_content(fetch(args.url).content)
     else:
         print 'reading file', args.file
         text = open(args.file).read()
