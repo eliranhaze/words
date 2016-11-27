@@ -24,8 +24,9 @@ class Source(object):
         if feed:
             for entry in feed['entries']:
                 if from_date:
-                    date = datetime.fromtimestamp(time.mktime(entry['published_parsed']))
-                    if date < from_date:
+                    published_parsed = entry.get('published_parsed')
+                    published_date = datetime.fromtimestamp(time.mktime(published_parsed)) if published_parsed else None
+                    if published_date and published_date < from_date:
                         continue
                 links.append(entry['link'])
         return links
