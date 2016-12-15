@@ -19,7 +19,10 @@ class Source(object):
         for feed_url in self.FEEDS:
             feed = feedparser.parse(feed_url)
             url_list.extend(self._get_links(feed, from_date))
-        return set(url_list)
+        return set(url_list).union(self.get_extra_urls())
+
+    def get_extra_urls(self):
+        return set()
 
     def _get_links(self, feed, from_date=None):
         links = []
@@ -101,6 +104,17 @@ class NewYorker(Source):
             return soup.findAll('div', attrs={'class': 'articleBody'})[0].text
         except:
             return ''
+
+    def get_extra_urls(self):
+        urls = set()
+        response = fetch('http://www.newyorker.com/popular', verify=False)
+        soup = BeautifulSoup(response.content)
+        for article in soup.findAll('article'):
+            for a in article.findAll('a'):
+                href = a.get('href')
+                if href and 'contributors' not in href:
+                    urls.add(href.replace('?intcid=popular', '?mbid=rss'))
+        return urls
 
 class TheGuardian(Source):
     FEEDS = [
