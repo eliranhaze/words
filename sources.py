@@ -2,13 +2,15 @@ import feedparser
 import time
 
 from bs4 import BeautifulSoup
+from concurrent.futures import ThreadPoolExecutor, wait, ALL_COMPLETED
 from datetime import datetime
 
 from fetch import fetch
 
 class Source(object):
 
-    def __init__(self, feeds=None):
+    def __init__(self, feeds=None, num_workers=12):
+        self.executor = ThreadPoolExecutor(num_workers)
         if feeds:
             self.FEEDS = feeds
 
@@ -32,12 +34,31 @@ class Source(object):
         return links
 
     def get_articles(self, from_date=None):
-        for url in self._filter(self.urls(from_date)):
-            response = fetch(url, verify=False)
+        urls = list(self._filter(self.urls(from_date)))
+        responses = self.multiple_requests(urls)
+        for response, url in zip(responses, urls[:len(responses)]):
             if response:
                 soup = BeautifulSoup(response.content)
                 title = soup.find('title')
                 yield self._trim(url), title.text if title else '---', self.extract(soup)
+
+    def multiple_requests(self, urls):
+        timeout = 600 # use a very large timeout to get all responses
+        t1 = time.time()
+        futures = [
+            self.executor.submit(self.request, url)
+            for url in urls
+        ]
+        futures = wait(futures, timeout, return_when = ALL_COMPLETED)
+
+        for future in futures.not_done:
+            future.cancel()
+        results = [future.result() for future in futures.done]
+        results = [result for result in results if result is not None]
+        return results
+
+    def request(self, url):
+        return fetch(url, verify=False)
 
     def _trim(self, url):
         return url.replace('http://','').replace('https://','')

@@ -1,5 +1,6 @@
 import argparse
 import sys
+import time
 
 from datetime import datetime, timedelta
 
@@ -82,9 +83,11 @@ def main():
     if from_date:
         print 'since: %s utc' % from_date.strftime('%d-%m %H:%M')
 
+    t1 = time.time()
     result, erred = fetch_articles(sources, from_date)
+    print # new line needed after previous func
+    print 'done fetching in %.1fs' % (time.time()-t1)
 
-    print
     result.sort(key=lambda x: -len(x[2].found))
     outfile = write_output(result, erred, console=args.console)
     if outfile:
