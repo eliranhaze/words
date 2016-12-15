@@ -17,8 +17,9 @@ class Source(object):
 
     def urls(self, from_date=None):
         url_list = []
-        for feed_url in self.FEEDS:
-            feed = feedparser.parse(feed_url)
+        responses = self.multiple_requests(self.FEEDS)
+        for response in responses:
+            feed = feedparser.parse(self.minify_feed(response.content))
             url_list.extend(self._get_links(feed, from_date))
         return set(url_list).union(self.get_extra_urls())
 
@@ -40,29 +41,31 @@ class Source(object):
     def get_articles(self, from_date=None):
         urls = list(self._filter(self.urls(from_date)))
         responses = self.multiple_requests(urls)
-        for response, url in zip(responses, urls[:len(responses)]):
+        for response in responses:
             if response:
                 soup = BeautifulSoup(self.minify(response.content))
                 title = soup.find('title')
-                yield self._trim(url), title.text if title else '---', self.extract(soup)
+                yield self._trim(response.url), title.text if title else '---', self.extract(soup)
 
     def multiple_requests(self, urls):
         timeout = 600 # use a very large timeout to get all responses
         t1 = time.time()
+        results = self.execute(self.request, urls, timeout)
+        #print
+        #print 'fetched %d/%d in %.1fs' % (len(results), len(urls), time.time()-t1)
+        #print
+        return results
+
+    def execute(self, task, arg_list, timeout):
         futures = [
-            self.executor.submit(self.request, url)
-            for url in urls
+            self.executor.submit(task, arg)
+            for arg in arg_list
         ]
         futures = wait(futures, timeout, return_when = ALL_COMPLETED)
-
         for future in futures.not_done:
             future.cancel()
         results = [future.result() for future in futures.done]
-        results = [result for result in results if result is not None]
-        print
-        print 'fetched %d/%d in %.1fs' % (len(results), len(urls), time.time()-t1)
-        print
-        return results
+        return [result for result in results if result is not None]
 
     def request(self, url):
         return fetch(url, verify=False)
@@ -72,6 +75,11 @@ class Source(object):
 
     def extract(self, soup):
         return ''.join(p.text for p in self._main_element(soup).findAll('p') if len(p.text) > 50)
+
+    def minify_feed(self, content):
+        content = re.sub('<content:encoded[\s\S]*?</content:encoded>', '', content)
+        content = re.sub('<description[\s\S]*?</description>', '', content)
+        return content
 
     def minify(self, content, rep=True):
         content = re.sub('<footer[\s\S]*?</footer>', '', content)
