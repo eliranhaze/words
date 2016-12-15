@@ -1,4 +1,5 @@
 import feedparser
+import re
 import time
 
 from bs4 import BeautifulSoup
@@ -41,7 +42,7 @@ class Source(object):
         responses = self.multiple_requests(urls)
         for response, url in zip(responses, urls[:len(responses)]):
             if response:
-                soup = BeautifulSoup(response.content)
+                soup = BeautifulSoup(self.minify(response.content))
                 title = soup.find('title')
                 yield self._trim(url), title.text if title else '---', self.extract(soup)
 
@@ -58,6 +59,9 @@ class Source(object):
             future.cancel()
         results = [future.result() for future in futures.done]
         results = [result for result in results if result is not None]
+        print
+        print 'fetched %d/%d in %.1fs' % (len(results), len(urls), time.time()-t1)
+        print
         return results
 
     def request(self, url):
@@ -68,6 +72,20 @@ class Source(object):
 
     def extract(self, soup):
         return ''.join(p.text for p in self._main_element(soup).findAll('p') if len(p.text) > 50)
+
+    def minify(self, content, rep=True):
+        content = re.sub('<footer[\s\S]*?</footer>', '', content)
+        content = re.sub('<nav[\s\S]*?</nav>', '', content)
+        content = re.sub('<script[\s\S]*?</script>', '', content)
+        content = re.sub('<form[\s\S]*?</form>', '', content)
+        content = re.sub('<style[\s\S]*?</style>', '', content)
+        content = re.sub('<h[1-6][\s\S]*?</h[1-6]>', '', content)
+        content = re.sub('<!--[\s\S]*?-->', '', content)
+        content = re.sub('href=".*?"', '', content)
+        content = re.sub('src=".*?"', '', content)
+        if rep:
+            content = content.replace('  ','').replace('\n','')
+        return content
 
     def _main_element(self, soup):
         return soup
