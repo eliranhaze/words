@@ -11,7 +11,8 @@ def _wordify(string):
     return re.sub('\W+', '', string).lower()
 
 def _textify(text):
-    return re.sub('\W+', ' ', text).lower().split()
+    # in the pattern '+' is not needed because of the split
+    return re.sub('\W', ' ', text).lower().split()
 
 def get_words():
     words = [_wordify(s) for s in open(WORDFILE).read().splitlines()]
