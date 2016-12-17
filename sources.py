@@ -43,7 +43,8 @@ class Source(object):
         responses = self.multiple_requests(urls)
         for response in responses:
             if response:
-                soup = BeautifulSoup(minify_html(response.content))
+                content = self._extra_minify(minify_html(response.content))
+                soup = BeautifulSoup(content)
                 title = soup.find('title')
                 yield self._trim(response.url), title.text if title else '---', self.extract(soup)
 
@@ -54,6 +55,9 @@ class Source(object):
     def _trim(self, url):
         url = url.replace('http://','').replace('https://','')
         return re.sub('\?.*','',url)
+
+    def _extra_minify(self, content):
+        return content
 
     def extract(self, soup):
         return ''.join(p.text for p in self._main_element(soup).findAll('p') if len(p.text) > 50)
@@ -128,6 +132,8 @@ class NyTimes(Source):
         'http://rss.nytimes.com/services/xml/rss/nyt/Space.xml',
         'http://rss.nytimes.com/services/xml/rss/nyt/Health.xml',
         'http://rss.nytimes.com/services/xml/rss/nyt/Arts.xml',
+        'http://rss.nytimes.com/services/xml/rss/nyt/Magazine.xml',
+        'http://rss.nytimes.com/services/xml/rss/nyt/MostViewed.xml',
     ]
 
     def _main_element(self, soup):
@@ -143,6 +149,15 @@ class NyTimes(Source):
             'museum-gallery-listings',
         ]
         return [u for u in urls if all(f not in u for f in filtered)]
+
+    def _extra_minify(self, content):
+        content = re.sub('<meta [\s\S]*?>', '', content)
+        content = re.sub('<link [\s\S]*?>', '', content)
+        content = re.sub('<aside[\s\S]*?</aside>', '', content)
+        content = re.sub('<ul[\s\S]*?</ul>', '', content)
+        content = re.sub('<ol[\s\S]*?</ol>', '', content)
+        content = re.sub('data-\w*-count="\d*"', ' ', content)
+        return content
 
 class NyBooks(Source):
     FEEDS = [
