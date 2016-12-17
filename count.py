@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 
 import words
 from utils.fetch import fetch
+from utils.minify import minify_html
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -16,7 +17,7 @@ def get_args():
     return args
 
 def textify_web_content(content):
-    soup = BeautifulSoup(content)
+    soup = BeautifulSoup(minify_html(content))
     return ' '.join([p.text for p in soup.findAll('p')])
 
 def main():
