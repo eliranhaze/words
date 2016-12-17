@@ -1,14 +1,17 @@
 import re
 
+from brains.predict import Prediction
+
 WORDFILE = 'wlist'
-WPM = 130
+WPM = 125
 MAX_WORD_REPEAT = 3
 
 PRINT_WORDS = False
 PRINT_OUT = 'words.out'
 
-def _wordify(string):
-    return re.sub('\W+', '', string).lower()
+def _wordify(string, lower=True):
+    w = re.sub('\W+', '', string)
+    return w.lower() if lower else w
 
 def _textify(text):
     # in the pattern '+' is not needed because of the split
@@ -41,21 +44,28 @@ def find_words(text_words):
     return found
 
 def full_report(text, save=True):
-    text_words = _textify(text)
-    found = find_words(text_words)
-    return Report(text_words, found, save)
+    return Report(text, save)
 
 class Report(object):
 
-    def __init__(self, text_words, found, save=True):
+    PREDICTOR = Prediction.get()
+
+    def __init__(self, text, save=True):
+        text_words = _textify(text)
+        found = find_words(text_words)
         if save:
             self.text_words = text_words
             self.unique_text_words = set(text_words)
             self.num_unique_text_words = len(self.unique_text_words)
             self.unique_found = set(found)
         self.num_text_words = len(text_words)
+        self.prediction = self.predictor.predict(text)[1]
         self.found = found
         self.save = save
+
+    @property
+    def predictor(self):
+        return self.PREDICTOR
 
     @property
     def found_percent(self):
@@ -68,8 +78,9 @@ class Report(object):
     @property
     def reading_time(self):
         m = self.reading_minutes
-        h, m = divmod(m, 60)
-        return '%dh %dm' % (h, m)
+        #h, m = divmod(m, 60)
+        #return '%dh%dm' % (h, m)
+        return '%dm' % m
     
     def _print(self):
         if not self.save:
@@ -77,7 +88,8 @@ class Report(object):
         print '--- report ---'
         print '- word count: %d (%d unique)' % (self.num_text_words, self.num_unique_text_words)
         print '- found: %d (%d unique)' % (len(self.found), len(self.unique_found))
-        print '- pct: %.2f%%' % self.found_percent
+        print '- percent: %.2f%%' % self.found_percent
+        print '- prediction: [%.2f]' % self.prediction
         print '- reading time: %s' % self.reading_time
 
         if PRINT_WORDS:

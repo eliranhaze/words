@@ -1,4 +1,5 @@
 import argparse
+import os
 import sys
 import time
 
@@ -8,12 +9,14 @@ from sources import get_sources, Source
 from words import full_report, _wordify
 
 OUTPUT_DIR = 'out'
+if not os.path.exists(OUTPUT_DIR):
+    os.makedirs(OUTPUT_DIR)
 
 def make_title(title):
-    max_size = 25
-    title = title.replace('  ',' ').replace('  ',' ')
+    max_size = 24
+    title = ' '.join(title.split()) # remove double spaces
     if len(title) > max_size:
-        title = title[:max_size-3] + '...'
+        title = title[:max_size-1] + '-'
     return title
 
 def fetch_articles(sources, from_date=None):
@@ -37,9 +40,10 @@ def write_output(result, erred, console):
         if report.found:
             num = len(report.found)
             pct = report.found_percent
+            pred = report.prediction
             rtime = report.reading_time
             def write(title):
-                string = '%d %.2f %s %s %s' % (num, pct, rtime, make_title(title), url)
+                string = '%d %.2f [%.2f] %s %s %s' % (num, pct, pred, rtime, make_title(title), url)
                 if console:
                     print string
                 else:
@@ -48,7 +52,7 @@ def write_output(result, erred, console):
                 try:
                     write(title)
                 except UnicodeEncodeError:
-                    title = ' '.join([_wordify(w) for w in title.split()])
+                    title = ' '.join([_wordify(w, lower=False) for w in title.split()])
                     write(title)
             except Exception, e:
                 erred.append((url, e))

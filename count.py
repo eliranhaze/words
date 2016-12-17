@@ -2,7 +2,7 @@ import argparse
 from bs4 import BeautifulSoup
 
 import words
-from fetch import fetch
+from utils.fetch import fetch
 
 def get_args():
     parser = argparse.ArgumentParser()

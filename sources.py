@@ -6,12 +6,12 @@ from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor, wait, ALL_COMPLETED
 from datetime import datetime
 
-from fetch import fetch
+from utils.fetch import fetch, multi_fetch
+from utils.minify import minify_feed, minify_html
 
 class Source(object):
 
-    def __init__(self, feeds=None, num_workers=12):
-        self.executor = ThreadPoolExecutor(num_workers)
+    def __init__(self, feeds=None):
         if feeds:
             self.FEEDS = feeds
 
@@ -19,7 +19,7 @@ class Source(object):
         url_list = []
         responses = self.multiple_requests(self.FEEDS)
         for response in responses:
-            feed = feedparser.parse(self.minify_feed(response.content))
+            feed = feedparser.parse(minify_feed(response.content))
             url_list.extend(self._get_links(feed, from_date))
         return set(url_list).union(self.get_extra_urls())
 
@@ -43,57 +43,20 @@ class Source(object):
         responses = self.multiple_requests(urls)
         for response in responses:
             if response:
-                soup = BeautifulSoup(self.minify(response.content))
+                soup = BeautifulSoup(minify_html(response.content))
                 title = soup.find('title')
                 yield self._trim(response.url), title.text if title else '---', self.extract(soup)
 
     def multiple_requests(self, urls):
         timeout = 600 # use a very large timeout to get all responses
-        t1 = time.time()
-        results = self.execute(self.request, urls, timeout)
-        #print
-        #print 'fetched %d/%d in %.1fs' % (len(results), len(urls), time.time()-t1)
-        #print
-        return results
-
-    def execute(self, task, arg_list, timeout):
-        futures = [
-            self.executor.submit(task, arg)
-            for arg in arg_list
-        ]
-        futures = wait(futures, timeout, return_when = ALL_COMPLETED)
-        for future in futures.not_done:
-            future.cancel()
-        results = [future.result() for future in futures.done]
-        return [result for result in results if result is not None]
-
-    def request(self, url):
-        return fetch(url, verify=False)
+        return multi_fetch(urls, timeout)
 
     def _trim(self, url):
-        return url.replace('http://','').replace('https://','')
+        url = url.replace('http://','').replace('https://','')
+        return re.sub('\?.*','',url)
 
     def extract(self, soup):
         return ''.join(p.text for p in self._main_element(soup).findAll('p') if len(p.text) > 50)
-
-    def minify_feed(self, content):
-        content = re.sub('<content:encoded[\s\S]*?</content:encoded>', '', content)
-        content = re.sub('<description[\s\S]*?</description>', '', content)
-        return content
-
-    def minify(self, content, rep=True):
-        content = re.sub('<footer[\s\S]*?</footer>', '', content)
-        content = re.sub('<nav[\s\S]*?</nav>', '', content)
-        content = re.sub('<script[\s\S]*?</script>', '', content)
-        content = re.sub('<form[\s\S]*?</form>', '', content)
-        content = re.sub('<style[\s\S]*?</style>', '', content)
-        content = re.sub('<h[1-6][\s\S]*?</h[1-6]>', '', content)
-        content = re.sub('<!--[\s\S]*?-->', '', content)
-        content = re.sub('href=".*?"', '', content)
-        content = re.sub('src=".*?"', '', content)
-        if rep:
-            content = content.replace('  ','').replace('\n','')
-        return content
 
     def _main_element(self, soup):
         return soup
