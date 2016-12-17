@@ -17,6 +17,7 @@ def minify_html(content):
     content = re.sub('<h[1-6][\s\S]*?</h[1-6]>', '', content)
     content = re.sub('<!--[\s\S]*?-->', '', content)
     content = re.sub('href=".*?"', ' ', content)
+    content = re.sub('style=".*?"', ' ', content)
     content = re.sub('src=".*?"', ' ', content)
     content = content.replace('  ','').replace('\n\n','\n')
     return content
