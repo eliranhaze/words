@@ -21,6 +21,7 @@ DATA_SOURCES = {
          'http://www.newyorker.com/magazine/2016/11/07/the-case-against-democracy',
          'http://www.newyorker.com/magazine/2015/07/20/the-really-big-one',
          'http://www.newyorker.com/magazine/2011/08/08/the-answer-man-stephen-greenblatt',
+         'http://www.newyorker.com/magazine/2016/12/19/our-automated-future',
 
          'http://www.nybooks.com/articles/2016/05/26/our-awful-prisons-how-they-can-be-changed/',
          'http://www.nybooks.com/articles/2015/12/03/satan-salem/',
