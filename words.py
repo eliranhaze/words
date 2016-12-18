@@ -48,8 +48,6 @@ def full_report(text, save=True):
 
 class Report(object):
 
-    PREDICTOR = Prediction.get()
-
     def __init__(self, text, save=True):
         text_words = _textify(text)
         found = find_words(text_words)
@@ -65,7 +63,7 @@ class Report(object):
 
     @property
     def predictor(self):
-        return self.PREDICTOR
+        return Prediction.get()
 
     @property
     def found_percent(self):
