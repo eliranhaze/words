@@ -32,7 +32,7 @@ DATA_SOURCES = {
 
          'https://plato.stanford.edu/entries/self-reference/',
          'https://plato.stanford.edu/entries/truth/',
-     ],
+    ],
     0: [
          'http://www.dailymail.co.uk/news/article-4041542/Duke-Duchess-Cambridge-spend-private-Christmas-Middleton-family-joining-Queen-Sandringham.html',
          'http://www.dailymail.co.uk/news/article-4041424/It-s-Michael-CATson-Beloved-pet-Scrappy-turns-black-white-diagnosed-similar-skin-pigment-disorder-King-Pop.html',
@@ -45,9 +45,17 @@ DATA_SOURCES = {
          'http://www.ynetnews.com/articles/0,7340,L-4889175,00.html',
          'https://www.thesun.co.uk/tvandshowbiz/2419251/strictly-come-dancing-dancer-gorka-marquez-fiancee-lauren-sheridan-split-blackpool-attack/',
          'http://www.dailymail.co.uk/debate/article-1278510/Depression-Its-just-new-trendy-illness.html',
-     ],
+    ],
 }
 
+TEST_SOURCES = {
+    1: [
+    ],
+    0: [
+    ],
+}
+
+# TODO: handle file sources
 def extract(html):
     soup = bs(minify_html(html))
     return ''.join(p.text for p in soup.findAll('p') if len(p.text) > 50)
