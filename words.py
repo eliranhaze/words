@@ -43,12 +43,12 @@ def find_words(text_words):
             found.append(w)
     return found
 
-def full_report(text, save=True):
-    return Report(text, save)
+def full_report(text, save=True, list_words=False):
+    return Report(text, save, list_words)
 
 class Report(object):
 
-    def __init__(self, text, save=True):
+    def __init__(self, text, save=True, list_words=False):
         text_words = _textify(text)
         found = find_words(text_words)
         if save:
@@ -60,6 +60,7 @@ class Report(object):
         self.prediction = self.predictor.predict(text)[1]
         self.found = found
         self.save = save
+        self.list_words = list_words
 
     @property
     def predictor(self):
@@ -90,10 +91,16 @@ class Report(object):
         print '- prediction: [%.2f]' % self.prediction
         print '- reading time: %s' % self.reading_time
 
+        if self.list_words:
+            print '- found words:'
+            for f in self.found:
+                print '-- %s' % f
+
         if PRINT_WORDS:
             with open(PRINT_OUT, 'w') as out:
                 for f in self.found:
                     out.write(f+'\n')
                 out.write('\n=== TEXT ===\n')
                 out.write(' '.join(self.text_words))
+                out.write('\n')
 
