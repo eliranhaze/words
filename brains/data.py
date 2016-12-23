@@ -34,6 +34,7 @@ DATA_SOURCES = {
 
          'https://plato.stanford.edu/entries/self-reference/',
          'https://plato.stanford.edu/entries/truth/',
+         'https://plato.stanford.edu/entries/reference/',
     ],
     0: [
          'http://www.dailymail.co.uk/news/article-4041542/Duke-Duchess-Cambridge-spend-private-Christmas-Middleton-family-joining-Queen-Sandringham.html',
@@ -55,7 +56,13 @@ DATA_SOURCES = {
          'https://www.thesun.co.uk/tvandshowbiz/2463681/katie-price-says-shell-take-legal-action-against-hotel-that-ejected-her-after-theft-of-100k-diamonds/',
          'http://www.creationism.org/english/marriage_en.htm',
          'http://liveanddare.com/contemplative-prayer-and-christian-meditation',
-
+         'http://www.bodybuilding.com/content/layne-nortons-hard-truths-of-training-and-nutrition.html',
+         'http://www.bodybuilding.com/content/6-biggest-blunders-to-avoid-while-trying-to-add-mass-offseason.html',
+         'http://www.cracked.com/blog/4-ridiculously-underrated-movies-from-2016/',
+         'http://www.cracked.com/article_20953_5-horrifying-ways-ex-can-ruin-your-life-with-nude-photos.html',
+         'http://www.cracked.com/blog/5-things-every-snob-believes-that-are-totally-wrong/',
+         'http://www.cracked.com/article_24442_6-hilariously-random-things-people-once-used-as-money.html',
+         'http://www.cracked.com/blog/6-harsh-truths-that-will-make-you-better-person/',
     ],
 }
 
@@ -81,7 +88,7 @@ def to_text(sources):
         if len(text) >= MIN_TEXT_LEN:
             texts.append(extract(response.content))
         else:
-            print 'warning: text len %d<%d (url=%s)' % (len(text), MIN_TEXT_LEN, response.url)
+            print '*** warning: text len %d<%d (url=%s) ***' % (len(text), MIN_TEXT_LEN, response.url)
     return texts
 
 def get():
@@ -91,4 +98,5 @@ def get():
         for text in to_text(sources):
             data.append(text)
             target.append(cls)
+    print 'got %d/%d data items' % (len(data), sum(len(sources) for sources in DATA_SOURCES.itervalues()))
     return data, target
