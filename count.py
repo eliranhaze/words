@@ -19,14 +19,14 @@ def get_args():
 
 def textify_web_content(content):
     soup = BeautifulSoup(minify_html(content))
-    return ' '.join([p.text for p in soup.findAll('p') if len(p.text) > 50])
+    return ' '.join([p.text.strip() for p in soup.findAll('p') if len(p.text.strip()) > 100])
 
 def main():
 
     args = get_args()
     if args.url:
         print 'fetching text from', args.url
-        text = textify_web_content(fetch(args.url).content)
+        text = textify_web_content(fetch(args.url, verify=False).content)
     else:
         print 'reading file', args.file
         text = open(args.file).read()
