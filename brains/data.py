@@ -42,13 +42,15 @@ DATA_SOURCES = {
          'http://www.dailymail.co.uk/debate/article-1278510/Depression-Its-just-new-trendy-illness.html',
          'http://www.dailymail.co.uk/debate/article-1220756/A-strange-lonely-troubling-death--.html',
          'http://www.dailymail.co.uk/debate/article-1224858/Yes-scientists-good-But-country-run-arrogant-gods-certainty-truly-hell-earth.html',
+         'http://www.dailymail.co.uk/femail/article-3982918/A-charming-story-UK-s-popular-jewellery-brand-Pandora-went-small-family-business-11-5-BILLION-empire-celebs-t-it.html',
          'https://www.psychologytoday.com/blog/sex-murder-and-the-meaning-life/201612/does-trump-s-election-disprove-the-existence-god',
          'https://www.marxists.org/reference/subject/philosophy/works/fr/derrida.htm',
          'https://www.marxists.org/reference/subject/philosophy/works/ge/heidegge.htm',
          'http://www.whatchristianswanttoknow.com/20-inspirational-bible-verses-about-gods-love/',
-         'http://www.wikihow.com/Behave-as-a-Princess',
          'http://www.foxnews.com/politics/2012/02/18/santorum-questions-obamas-christian-values-romneys-olympics-leadership.html',
+         'http://www.foxnews.com/entertainment/2016/12/23/florida-beauty-pageant-winner-arrested-for-allegedly-beating-man-with-aluminum-baseball-bat.html',
          'http://www.ynetnews.com/articles/0,7340,L-4889175,00.html',
+         'http://www.ynetnews.com/articles/0,7340,L-4895886,00.html',
          'https://www.thesun.co.uk/tvandshowbiz/2419251/strictly-come-dancing-dancer-gorka-marquez-fiancee-lauren-sheridan-split-blackpool-attack/',
          'https://www.thesun.co.uk/tvandshowbiz/2463681/katie-price-says-shell-take-legal-action-against-hotel-that-ejected-her-after-theft-of-100k-diamonds/',
          'http://www.creationism.org/english/marriage_en.htm',
@@ -64,6 +66,8 @@ TEST_SOURCES = {
     ],
 }
 
+MIN_TEXT_LEN = 1000
+
 # TODO: handle file sources
 def extract(html):
     soup = bs(minify_html(html))
@@ -71,7 +75,14 @@ def extract(html):
 
 def to_text(sources):
     responses = multi_fetch(sources, timeout=240)
-    return [extract(response.content) for response in responses]
+    texts = []
+    for response in responses:
+        text = extract(response.content)
+        if len(text) >= MIN_TEXT_LEN:
+            texts.append(extract(response.content))
+        else:
+            print 'warning: text len %d<%d (url=%s)' % (len(text), MIN_TEXT_LEN, response.url)
+    return texts
 
 def get():
     data = []
