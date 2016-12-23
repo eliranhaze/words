@@ -13,7 +13,7 @@ def _is_valid_url(url):
     parse = urlparse.urlparse(url)
     return parse.scheme and parse.netloc
 
-def fetch(url, **kwargs):
+def fetch(url, verify=False, **kwargs):
     if not _is_valid_url(url):
         return
     try:
