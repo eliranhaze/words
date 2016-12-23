@@ -27,6 +27,8 @@ DATA_SOURCES = {
          'http://www.nybooks.com/articles/2015/12/03/satan-salem/',
          'http://www.nybooks.com/articles/2016/08/18/mystery-of-hieronymus-bosch/',
 
+         'http://www.3ammagazine.com/3am/leiter-reports/',
+
          'http://www.theatlantic.com/education/archive/2016/08/across-the-border-and-into-school/496652/',
          'http://foreignpolicy.com/2016/11/10/the-dance-of-the-dunces-trump-clinton-election-republican-democrat/',
 
@@ -36,6 +38,10 @@ DATA_SOURCES = {
     0: [
          'http://www.dailymail.co.uk/news/article-4041542/Duke-Duchess-Cambridge-spend-private-Christmas-Middleton-family-joining-Queen-Sandringham.html',
          'http://www.dailymail.co.uk/news/article-4041424/It-s-Michael-CATson-Beloved-pet-Scrappy-turns-black-white-diagnosed-similar-skin-pigment-disorder-King-Pop.html',
+         'http://www.dailymail.co.uk/tvshowbiz/article-4060958/Has-sherry-Kate-Garraway-accused-DRUNK-GMB-spilling-glass-water-fluffing-lines-speaking-guests.html',
+         'http://www.dailymail.co.uk/debate/article-1278510/Depression-Its-just-new-trendy-illness.html',
+         'http://www.dailymail.co.uk/debate/article-1220756/A-strange-lonely-troubling-death--.html',
+         'http://www.dailymail.co.uk/debate/article-1224858/Yes-scientists-good-But-country-run-arrogant-gods-certainty-truly-hell-earth.html',
          'https://www.psychologytoday.com/blog/sex-murder-and-the-meaning-life/201612/does-trump-s-election-disprove-the-existence-god',
          'https://www.marxists.org/reference/subject/philosophy/works/fr/derrida.htm',
          'https://www.marxists.org/reference/subject/philosophy/works/ge/heidegge.htm',
@@ -44,7 +50,10 @@ DATA_SOURCES = {
          'http://www.foxnews.com/politics/2012/02/18/santorum-questions-obamas-christian-values-romneys-olympics-leadership.html',
          'http://www.ynetnews.com/articles/0,7340,L-4889175,00.html',
          'https://www.thesun.co.uk/tvandshowbiz/2419251/strictly-come-dancing-dancer-gorka-marquez-fiancee-lauren-sheridan-split-blackpool-attack/',
-         'http://www.dailymail.co.uk/debate/article-1278510/Depression-Its-just-new-trendy-illness.html',
+         'https://www.thesun.co.uk/tvandshowbiz/2463681/katie-price-says-shell-take-legal-action-against-hotel-that-ejected-her-after-theft-of-100k-diamonds/',
+         'http://www.creationism.org/english/marriage_en.htm',
+         'http://liveanddare.com/contemplative-prayer-and-christian-meditation',
+
     ],
 }
 
@@ -58,7 +67,7 @@ TEST_SOURCES = {
 # TODO: handle file sources
 def extract(html):
     soup = bs(minify_html(html))
-    return ''.join(p.text for p in soup.findAll('p') if len(p.text) > 50)
+    return ' '.join(p.text.strip() for p in soup.findAll('p') if len(p.text.strip()) > 80)
 
 def to_text(sources):
     responses = multi_fetch(sources, timeout=240)
