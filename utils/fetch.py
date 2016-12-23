@@ -14,15 +14,21 @@ def _is_valid_url(url):
     return parse.scheme and parse.netloc
 
 def fetch(url, verify=False, **kwargs):
-    if not _is_valid_url(url):
-        return
-    try:
+    def _inner(url, verify, **kwargs):
+        if not _is_valid_url(url):
+            return
         while True:
-            return session.get(url, **kwargs)
-    except requests.exceptions.ConnectionError:
-        time.sleep(1)
-    except requests.exceptions.TooManyRedirects:
-        return
+            try:
+                return session.get(url, verify=verify, **kwargs)
+            except requests.exceptions.ConnectionError, e:
+                print 'got error: %r' % e
+                time.sleep(1)
+            except requests.exceptions.TooManyRedirects:
+                return
+    result = _inner(url, verify, **kwargs)
+    if not result:
+        print 'fetch: got none (url=%s)' % url
+    return result
 
 def multi_fetch(urls, timeout, verify=False, **kwargs):
     task = lambda url: fetch(url, verify=verify, **kwargs)
