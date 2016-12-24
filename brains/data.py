@@ -26,6 +26,7 @@ DATA_SOURCES = {
          'http://www.nybooks.com/articles/2016/05/26/our-awful-prisons-how-they-can-be-changed/',
          'http://www.nybooks.com/articles/2015/12/03/satan-salem/',
          'http://www.nybooks.com/articles/2016/08/18/mystery-of-hieronymus-bosch/',
+         'http://www.nybooks.com/articles/2016/09/29/hobbes-spinoza-locke-leibniz-hume-wrestled-new/',
 
          'http://www.3ammagazine.com/3am/leiter-reports/',
 
