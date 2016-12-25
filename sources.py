@@ -96,7 +96,7 @@ class NewYorker(Source):
         try:
             return soup.findAll('div', attrs={'class': 'articleBody'})[0].text
         except:
-            return ''
+            return super(NewYorker, self).extract(soup)
 
     def get_extra_urls(self):
         urls = set()
@@ -258,6 +258,29 @@ class WashingtonPost(Source):
 class Aeon(Source):
     FEEDS = [
         'https://aeon.co/feed.rss',
+    ]
+
+class ScientificAmerican(Source):
+    FEEDS = [
+        # main
+        'http://rss.sciam.com/ScientificAmerican-Global',
+        'http://rss.sciam.com/basic-science',
+        'http://rss.sciam.com/sciam/mind-and-brain',
+        'http://rss.sciam.com/sciam/health-and-medicine',
+        'http://rss.sciam.com/sciam/technology',
+        'http://rss.sciam.com/sciam/energy-and-sustainability',
+        # blogs
+        'http://rss.sciam.com/anthropology-in-practice/feed',
+        'http://rss.sciam.com/beautiful-minds/feed',
+        'http://rss.sciam.com/cross-check/feed',
+        'http://rss.sciam.com/expeditions/feed',
+        'http://rss.sciam.com/guest-blog/feed',
+        'http://rss.sciam.com/illusion-chasers/feed',
+        'http://rss.sciam.com/life-unbounded/feed',
+        'http://rss.sciam.com/mind-guest-blog/feed',
+        'http://rss.sciam.com/observations/feed',
+        'http://rss.sciam.com/roots-of-unity/feed',
+        'http://rss.sciam.com/rosetta-stones/feed',
     ]
 
 def get_sources(sources=None):
