@@ -68,7 +68,7 @@ class Report(object):
 
     @property
     def found_percent(self):
-        return 100.*len(self.found)/self.num_text_words
+        return 100.*len(self.found)/self.num_text_words if self.num_text_words else 0
 
     @property
     def reading_minutes(self):
