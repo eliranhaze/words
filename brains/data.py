@@ -66,6 +66,9 @@ DATA_SOURCES = {
          'http://www.cracked.com/blog/5-things-every-snob-believes-that-are-totally-wrong/',
          'http://www.cracked.com/article_24442_6-hilariously-random-things-people-once-used-as-money.html',
          'http://www.cracked.com/blog/6-harsh-truths-that-will-make-you-better-person/',
+         'http://www.cracked.com/blog/analyzing-pros-cons-trump-winning-election/',
+         'http://www.cracked.com/blog/cracked-says-goodbye-to-vine/',
+         'http://www.cracked.com/blog/the-upside-to-2016-musical-revolution-near/',
     ],
 }
 
