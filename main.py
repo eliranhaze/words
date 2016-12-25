@@ -23,7 +23,13 @@ def fetch_articles(sources, from_date=None):
     result = []
     erred = []
     for source in sources:
+        urls = set()
         for url, title, text in source.get_articles(from_date):
+            if url in urls:
+                continue
+            urls.add(url)
+            if not text:
+                print 'warning: empty text (url=%s)' % url
             try:
                 result.append((url, title, full_report(text, save=False)))
                 sys.stdout.write('got %d articles (current: %s)           \r' % (len(result), source))
@@ -37,7 +43,7 @@ def write_output(result, erred, console):
         outfile = '%s/results_%s.out' % (OUTPUT_DIR, datetime.now().strftime('%d%m%y_%H%M'))
         out = open(outfile, 'w')
     for url, title, report in result:
-        if report.found:
+        if True: #report.found:
             num = len(report.found)
             pct = report.found_percent
             pred = report.prediction
