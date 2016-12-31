@@ -33,6 +33,7 @@ def get_words():
             extras.append(word + 'd')
             extras.append(word + 's')
             extras.append(word[:-1] + 'ing')
+            extras.append(word[:-1] + 'ial')
         else:
             extras.append(word + 'ed')
             extras.append(word + 'es')
