@@ -59,8 +59,9 @@ class Source(object):
     def _extra_minify(self, content):
         return content
 
+    # TODO: should be in a util, since this text-extraction technique is used in several places
     def extract(self, soup):
-        return ''.join(p.text for p in self._main_element(soup).findAll('p') if len(p.text) > 50)
+        return ''.join(p.text for p in self._main_element(soup).findAll('p') if len(p.text) > 80)
 
     def _main_element(self, soup):
         return soup
@@ -265,10 +266,21 @@ class ScientificAmerican(Source):
         # main
         'http://rss.sciam.com/ScientificAmerican-Global',
         'http://rss.sciam.com/basic-science',
-        'http://rss.sciam.com/sciam/mind-and-brain',
-        'http://rss.sciam.com/sciam/health-and-medicine',
-        'http://rss.sciam.com/sciam/technology',
+        'http://rss.sciam.com/sciam/biology',
+        'http://rss.sciam.com/sciam/climate',
+        'http://rss.sciam.com/sciam/computing',
         'http://rss.sciam.com/sciam/energy-and-sustainability',
+        'http://rss.sciam.com/sciam/ethics',
+        'http://rss.sciam.com/sciam/evolution',
+        'http://rss.sciam.com/sciam/health-and-medicine',
+        'http://rss.sciam.com/sciam/math',
+        'http://rss.sciam.com/sciam/mind-and-brain',
+        'http://rss.sciam.com/sciam/neuroscience',
+        'http://rss.sciam.com/sciam/physics',
+        'http://rss.sciam.com/sciam/psychology',
+        'http://rss.sciam.com/sciam/space',
+        'http://rss.sciam.com/sciam/technology',
+        'http://rss.sciam.com/sciam/weather',
         # blogs
         'http://rss.sciam.com/anthropology-in-practice/feed',
         'http://rss.sciam.com/beautiful-minds/feed',
