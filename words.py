@@ -23,11 +23,20 @@ def get_words():
     extras = []
     for word in words:
         last = word[-1]
-        extras.append(word + ('ies' if last == 'y' else 's'))
-        extras.append(word + ('d' if last == 'e' else 'ed'))
-        extras.append(word + ('s' if last == 'e' else 'es'))
+        extras.append(word + 's')
         extras.append(word + 'ly')
-        extras.append((word[:-1] if last == 'e' else word) + 'ing')
+        if last == 'y':
+            extras.append(word[:-1] + 'ies')
+            extras.append(word[:-1] + 'ied')
+            extras.append(word + 'ing')
+        elif last == 'e':
+            extras.append(word + 'd')
+            extras.append(word + 's')
+            extras.append(word[:-1] + 'ing')
+        else:
+            extras.append(word + 'ed')
+            extras.append(word + 'es')
+            extras.append(word + 'ing')
         if last == 't':
             extras.append(word[:-1] + 'ce')
         elif word[-2:] == 'ce':
