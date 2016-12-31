@@ -25,6 +25,7 @@ DATA_SOURCES = {
          'http://www.newyorker.com/magazine/2016/02/29/mr-money-mustache-the-frugal-guru',
          'http://www.newyorker.com/culture/cultural-comment/searching-for-transcendence-with-radiohead',
          'http://www.newyorker.com/culture/cultural-comment/the-unmasking-of-elena-ferrante',
+         'http://www.newyorker.com/magazine/2017/01/02/rewriting-the-code-of-life',
 
          'http://www.nybooks.com/articles/2016/05/26/our-awful-prisons-how-they-can-be-changed/',
          'http://www.nybooks.com/articles/2015/12/03/satan-salem/',
@@ -35,6 +36,7 @@ DATA_SOURCES = {
 
          'http://www.theatlantic.com/education/archive/2016/08/across-the-border-and-into-school/496652/',
          'http://foreignpolicy.com/2016/11/10/the-dance-of-the-dunces-trump-clinton-election-republican-democrat/',
+         'https://www.scientificamerican.com/article/darwins-influence-on-modern-thought/',
 
          'https://plato.stanford.edu/entries/self-reference/',
          'https://plato.stanford.edu/entries/truth/',
@@ -71,6 +73,7 @@ DATA_SOURCES = {
          'http://www.cracked.com/blog/cracked-says-goodbye-to-vine/',
          'http://www.cracked.com/blog/the-upside-to-2016-musical-revolution-near/',
          'https://www.yahoo.com/celebrity/23-major-kardashian-jenner-moments-in-2016-013028622.html',
+         'http://www.spiritualresearchfoundation.org/hair-down',
     ],
 }
 
