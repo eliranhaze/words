@@ -32,9 +32,10 @@ Response = namedtuple('Response', ['url', 'content'])
 
 class Fetcher(object):
 
-    def __init__(self, cache=False, cache_ttl=None, refetch_prob=0):
+    def __init__(self, cache=False, cache_ttl=None, refetch_prob=0, processor=None):
         self.cache = Cache(cache_ttl) if cache else None
         self.refetch_prob = refetch_prob
+        self.processor = processor
         self.executor = Executor(num_workers=12)
         self._init_session()
 
@@ -72,7 +73,7 @@ class Fetcher(object):
     # main functions 
     #==============================================
 
-    def fetch(self, url, processor=None, **kwargs):
+    def fetch(self, url, **kwargs):
         if not _is_valid_url(url):
             return
         params = kwargs.get('params')
@@ -82,7 +83,7 @@ class Fetcher(object):
         response = self._request_until_success(url, **kwargs)
         if response:
             if self.cache:
-                content = processor(response.content) if processor else response.content
+                content = self.processor(response.content) if self.processor else response.content
                 self.cache.put(content, url, params)
         else:
             print 'fetch: got none (url=%s)' % url

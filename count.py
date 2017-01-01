@@ -1,13 +1,16 @@
 import argparse
 from bs4 import BeautifulSoup
+from datetime import timedelta
 
 import words
-from utils.fetch import fetch
+from utils.fetch import Fetcher
 from utils.minify import minify_html
 
 # suppress warnings
 import warnings
 warnings.filterwarnings("ignore")
+
+fetcher = Fetcher(cache=True, cache_ttl=timedelta(days=30), processor=minify_html)
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -22,7 +25,7 @@ def get_args():
     return args
 
 def textify_web_content(content):
-    soup = BeautifulSoup(minify_html(content))
+    soup = BeautifulSoup(content)
     return ' '.join([p.text.strip() for p in soup.findAll('p') if len(p.text.strip()) > 100])
 
 def main():
@@ -30,7 +33,7 @@ def main():
     args = get_args()
     if args.url:
         print 'fetching text from', args.url
-        text = textify_web_content(fetch(args.url, verify=False).content)
+        text = textify_web_content(fetcher.fetch(args.url, verify=False).content)
     else:
         print 'reading file', args.file
         text = open(args.file).read()
