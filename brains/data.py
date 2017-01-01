@@ -1,7 +1,10 @@
-import requests
 from bs4 import BeautifulSoup as bs
+from datetime import datetime, timedelta
 
-from utils.fetch import multi_fetch
+import requests
+import time
+
+from utils.fetch import Fetcher
 from utils.minify import minify_html
 
 DATA_SOURCES = {
@@ -60,6 +63,7 @@ DATA_SOURCES = {
          'http://www.ynetnews.com/articles/0,7340,L-4895886,00.html',
          'https://www.thesun.co.uk/tvandshowbiz/2419251/strictly-come-dancing-dancer-gorka-marquez-fiancee-lauren-sheridan-split-blackpool-attack/',
          'https://www.thesun.co.uk/tvandshowbiz/2463681/katie-price-says-shell-take-legal-action-against-hotel-that-ejected-her-after-theft-of-100k-diamonds/',
+         'https://www.thesun.co.uk/living/2510773/ill-help-you-kick-worlds-most-dangerous-drug-sugar-says-top-hypnotist-paul-mckenna/',
          'http://www.creationism.org/english/marriage_en.htm',
          'http://liveanddare.com/contemplative-prayer-and-christian-meditation',
          'http://www.bodybuilding.com/content/layne-nortons-hard-truths-of-training-and-nutrition.html',
@@ -86,13 +90,15 @@ TEST_SOURCES = {
 
 MIN_TEXT_LEN = 1000
 
+fetcher = Fetcher(cache=True, cache_ttl=timedelta.max, refetch_prob=0.01)
+
 # TODO: handle file sources
 def extract(html):
     soup = bs(minify_html(html))
     return ' '.join(p.text.strip() for p in soup.findAll('p') if len(p.text.strip()) > 80)
 
 def to_text(sources):
-    responses = multi_fetch(sources, timeout=240)
+    responses = fetcher.multi_fetch(sources, timeout=240)
     texts = []
     for response in responses:
         text = extract(response.content)
@@ -105,9 +111,10 @@ def to_text(sources):
 def get():
     data = []
     target = []
+    t1 = time.time()
     for cls, sources in DATA_SOURCES.iteritems():
         for text in to_text(sources):
             data.append(text)
             target.append(cls)
-    print 'got %d/%d data items' % (len(data), sum(len(sources) for sources in DATA_SOURCES.itervalues()))
+    print 'got %d/%d data items in %.1fs' % (len(data), sum(len(sources) for sources in DATA_SOURCES.itervalues()), time.time()-t1)
     return data, target

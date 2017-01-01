@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor, wait, ALL_COMPLETED
 from datetime import datetime
 
-from utils.fetch import fetch, multi_fetch
+from utils.fetch import fetch, multi_fetch, Fetcher
 from utils.minify import minify_feed, minify_html
 
 class Source(object):
@@ -17,7 +17,7 @@ class Source(object):
 
     def urls(self, from_date=None):
         url_list = []
-        responses = self.multiple_requests(self.FEEDS)
+        responses = Fetcher(cache=False).multi_fetch(self.FEEDS) # not using cache for feeds
         for response in responses:
             feed = feedparser.parse(minify_feed(response.content))
             url_list.extend(self._get_links(feed, from_date))
