@@ -1,3 +1,9 @@
+"""
+fetching and caching utility
+
+note: master version is at words project, until moved to a different repo
+"""
+
 from collections import namedtuple
 from datetime import datetime, timedelta
 
@@ -11,8 +17,6 @@ import urlparse
 from executor import Executor
 
 requests.packages.urllib3.disable_warnings()
-
-# TODO: this and other utils -- move to different repo!!
 
 #########################################################
 # utils
