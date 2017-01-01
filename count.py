@@ -5,6 +5,10 @@ import words
 from utils.fetch import fetch
 from utils.minify import minify_html
 
+# suppress warnings
+import warnings
+warnings.filterwarnings("ignore")
+
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--url', dest='url')

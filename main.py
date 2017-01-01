@@ -8,6 +8,10 @@ from datetime import datetime, timedelta
 from sources import get_sources, Source
 from words import full_report, _wordify
 
+# suppress warnings
+import warnings
+warnings.filterwarnings("ignore")
+
 OUTPUT_DIR = 'out'
 if not os.path.exists(OUTPUT_DIR):
     os.makedirs(OUTPUT_DIR)
