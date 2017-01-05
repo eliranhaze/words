@@ -1,2 +1,0 @@
-- move text extraction to utils, since it's used in several places
-- replace getting 'p' with getting everything but filtering the text (e.g. by size)
