@@ -8,6 +8,7 @@ from datetime import datetime
 
 from utils.fetch import fetch, multi_fetch, Fetcher
 from utils.minify import minify_feed, minify_html
+from utils.text import extract_text
 
 class Source(object):
 
@@ -59,9 +60,8 @@ class Source(object):
     def _extra_minify(self, content):
         return content
 
-    # TODO: should be in a util, since this text-extraction technique is used in several places
     def extract(self, soup):
-        return ''.join(p.text for p in self._main_element(soup).findAll('p') if len(p.text) > 80)
+        return extract_text(element=soup)
 
     def _main_element(self, soup):
         return soup

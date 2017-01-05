@@ -1,10 +1,10 @@
 import argparse
-from bs4 import BeautifulSoup
 from datetime import timedelta
 
 import words
 from utils.fetch import Fetcher
 from utils.minify import minify_html
+from utils.text import extract_text
 
 # suppress warnings
 import warnings
@@ -25,8 +25,7 @@ def get_args():
     return args
 
 def textify_web_content(content):
-    soup = BeautifulSoup(content)
-    return ' '.join([p.text.strip() for p in soup.findAll('p') if len(p.text.strip()) > 100])
+    return extract_text(html=content)
 
 def main():
 

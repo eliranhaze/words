@@ -6,6 +6,7 @@ import time
 
 from utils.fetch import Fetcher
 from utils.minify import minify_html
+from utils.text import extract_text
 
 DATA_SOURCES = {
     1: [
@@ -94,8 +95,7 @@ fetcher = Fetcher(cache=True, cache_ttl=timedelta.max, refetch_prob=0.01)
 
 # TODO: handle file sources
 def extract(html):
-    soup = bs(minify_html(html))
-    return ' '.join(p.text.strip() for p in soup.findAll('p') if len(p.text.strip()) > 80)
+    return extract_text(html=html)
 
 def to_text(sources):
     responses = fetcher.multi_fetch(sources, timeout=240)
