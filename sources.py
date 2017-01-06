@@ -76,6 +76,7 @@ class NewYorker(Source):
     FEEDS = [
         'http://www.newyorker.com/feed/everything',
         'http://www.newyorker.com/feed/articles',
+        'http://www.newyorker.com/feed/magazine',
         'http://www.newyorker.com/feed/news',
         'http://www.newyorker.com/feed/culture',
         'http://www.newyorker.com/feed/humor',
