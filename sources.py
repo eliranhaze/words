@@ -3,8 +3,7 @@ import re
 import time
 
 from bs4 import BeautifulSoup
-from concurrent.futures import ThreadPoolExecutor, wait, ALL_COMPLETED
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from utils.fetch import fetch, multi_fetch, Fetcher
 from utils.minify import minify_feed, minify_html
@@ -13,12 +12,14 @@ from utils.text import extract_text
 class Source(object):
 
     def __init__(self, feeds=None):
+        self.feed_fetcher = Fetcher(cache=False) # not using cache for feeds
+        self.html_fetcher = Fetcher(cache=True, cache_ttl=timedelta(days=365), processor=minify_html)
         if feeds:
             self.FEEDS = feeds
 
     def urls(self, from_date=None):
         url_list = []
-        responses = Fetcher(cache=False).multi_fetch(self.FEEDS) # not using cache for feeds
+        responses = self.feed_fetcher.multi_fetch(self.FEEDS)
         for response in responses:
             feed = feedparser.parse(minify_feed(response.content))
             url_list.extend(self._get_links(feed, from_date))
@@ -41,17 +42,13 @@ class Source(object):
 
     def get_articles(self, from_date=None):
         urls = list(self._filter(self.urls(from_date)))
-        responses = self.multiple_requests(urls)
+        responses = self.html_fetcher.multi_fetch(urls)
         for response in responses:
             if response:
-                content = self._extra_minify(minify_html(response.content))
+                content = self._extra_minify(response.content)
                 soup = BeautifulSoup(content)
                 title = soup.find('title')
                 yield self._trim(response.url), title.text if title else '---', self.extract(soup)
-
-    def multiple_requests(self, urls):
-        timeout = 600 # use a very large timeout to get all responses
-        return multi_fetch(urls, timeout)
 
     def _trim(self, url):
         url = url.replace('http://','').replace('https://','')
