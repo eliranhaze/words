@@ -28,10 +28,12 @@ def fetch_articles(sources, from_date=None):
     erred = []
     for source in sources:
         urls = set()
+        titles = set()
         for url, title, text in source.get_articles(from_date):
-            if url in urls:
+            if url in urls or title in titles:
                 continue
             urls.add(url)
+            titles.add(title)
             if not text:
                 print 'warning: empty text (url=%s)' % url
             try:
