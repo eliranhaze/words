@@ -22,8 +22,11 @@ requests.packages.urllib3.disable_warnings()
 # utils
 
 def _is_valid_url(url):
-    parse = urlparse.urlparse(url)
-    return parse.scheme and parse.netloc
+    try:
+        parse = urlparse.urlparse(url)
+        return parse.scheme and parse.netloc
+    except:
+        return False
 
 #########################################################
 # main objects
@@ -85,12 +88,11 @@ class Fetcher(object):
             return cached
         response = self._request_until_success(url, **kwargs)
         if response:
+            content = self.processor(response.content) if self.processor else response.content
             if self.cache:
-                content = self.processor(response.content) if self.processor else response.content
                 self.cache.put(content, url, params)
-        else:
-            print 'fetch: got none (url=%s)' % url
-        return response
+            return Response(url=response.url, content=content)
+        print 'fetch: got none (url=%s)' % url
 
     def multi_fetch(self, urls, timeout=120, **kwargs):
         task = lambda url: self.fetch(url, **kwargs)

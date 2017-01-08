@@ -2,28 +2,75 @@ import feedparser
 import re
 import time
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup as bs
 from datetime import datetime, timedelta
 
 from utils.fetch import fetch, multi_fetch, Fetcher
 from utils.minify import minify_feed, minify_html
 from utils.text import extract_text
 
+####################################################################################
+# urls
+
+class SourceUrls(object):
+
+    def __init__(self, urls):
+        self.urls = urls
+
+    def get(self, from_date=None):
+        url_list = []
+        responses = self.fetcher.multi_fetch(self.urls)
+        for response in responses:
+            url_list.extend(self._parse_urls(response.content, from_date))
+        return set(url_list)
+
+    def _parse_urls(self, content, from_date=None):
+        raise NotImplementedError
+
+class FeedUrls(SourceUrls):
+
+    fetcher = Fetcher(cache=True, cache_ttl=timedelta(hours=1), processor=minify_feed)
+
+    def _parse_urls(self, content, from_date=None):
+        links = []
+        if content:
+            feed = feedparser.parse(content)
+            for entry in feed['entries']:
+                if from_date:
+                    published_parsed = entry.get('published_parsed')
+                    published_date = datetime.fromtimestamp(time.mktime(published_parsed)) if published_parsed else None
+                    if published_date and published_date < from_date:
+                        continue
+                links.append(entry['link'])
+        return links
+
+class HtmlUrls(SourceUrls):
+
+    fetcher = Fetcher(cache=True, cache_ttl=timedelta(hours=5), processor=None)
+
+    def _parse_urls(self, content, from_date=None):
+        if content:
+            return [a.get('href') for a in bs(content).find_all('a')]
+
+####################################################################################
+# sources
+
 class Source(object):
 
-    def __init__(self, feeds=None):
-        self.feed_fetcher = Fetcher(cache=False) # not using cache for feeds
+    FEEDS = []
+    LINKS_PAGES = []
+
+    def __init__(self, feeds=None, links_pages=None):
         self.html_fetcher = Fetcher(cache=True, cache_ttl=timedelta(days=365), processor=minify_html)
         if feeds:
             self.FEEDS = feeds
+        if links_pages:
+            self.LINKS_PAGES = links_pages
 
     def urls(self, from_date=None):
-        url_list = []
-        responses = self.feed_fetcher.multi_fetch(self.FEEDS)
-        for response in responses:
-            feed = feedparser.parse(minify_feed(response.content))
-            url_list.extend(self._get_links(feed, from_date))
-        return set(url_list).union(self.get_extra_urls())
+        urls_from_feed = FeedUrls(urls=self.FEEDS).get(from_date=from_date)
+        urls_from_html = HtmlUrls(urls=self.LINKS_PAGES).get(from_date=from_date)
+        return urls_from_feed.union(urls_from_html).union(self.get_extra_urls())
 
     def get_extra_urls(self):
         return set()
@@ -46,7 +93,7 @@ class Source(object):
         for response in responses:
             if response:
                 content = self._extra_minify(response.content)
-                soup = BeautifulSoup(content)
+                soup = bs(content)
                 title = soup.find('title')
                 yield self._trim(response.url), title.text if title else '---', self.extract(soup)
 
@@ -100,7 +147,7 @@ class NewYorker(Source):
     def get_extra_urls(self):
         urls = set()
         response = fetch('http://www.newyorker.com/popular', verify=False)
-        soup = BeautifulSoup(response.content)
+        soup = bs(response.content)
         for article in soup.findAll('article'):
             for a in article.findAll('a'):
                 href = a.get('href')
