@@ -26,11 +26,12 @@ def make_title(title):
 def fetch_articles(sources, from_date=None):
     result = []
     erred = []
+    min_text_len = 2000
     for source in sources:
         urls = set()
         titles = set()
         for url, title, text in source.get_articles(from_date):
-            if url in urls or title in titles:
+            if url in urls or title in titles or len(text) < min_text_len:
                 continue
             urls.add(url)
             titles.add(title)
