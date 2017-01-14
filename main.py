@@ -26,7 +26,7 @@ def make_title(title):
 def fetch_articles(sources, from_date=None):
     result = []
     erred = []
-    min_text_len = 2000
+    min_text_len = 4000
     for source in sources:
         urls = set()
         titles = set()
