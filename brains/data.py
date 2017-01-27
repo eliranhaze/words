@@ -32,6 +32,8 @@ DATA_SOURCES = {
          'http://www.newyorker.com/magazine/2017/01/02/rewriting-the-code-of-life',
          'http://www.newyorker.com/magazine/2017/01/16/how-albert-woodfox-survived-solitary',
          'http://www.newyorker.com/magazine/2015/12/07/the-refugee-dilemma',
+         'http://www.newyorker.com/magazine/2017/01/16/chairman-spaceman',
+         'http://www.newyorker.com/magazine/2015/02/02/son-deceased',
 
          'http://www.nybooks.com/articles/2016/05/26/our-awful-prisons-how-they-can-be-changed/',
          'http://www.nybooks.com/articles/2015/12/03/satan-salem/',
