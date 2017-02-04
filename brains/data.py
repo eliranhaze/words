@@ -10,6 +10,7 @@ from utils.text import extract_text
 
 DATA_SOURCES = {
     1: [
+         # newyorker - articles
          'http://www.newyorker.com/magazine/2008/04/21/up-and-then-down',
          'http://www.newyorker.com/magazine/2013/02/04/life-at-the-top',
          'http://www.newyorker.com/magazine/2016/08/22/the-race-for-a-zika-vaccine',
@@ -32,9 +33,15 @@ DATA_SOURCES = {
          'http://www.newyorker.com/magazine/2017/01/02/rewriting-the-code-of-life',
          'http://www.newyorker.com/magazine/2017/01/16/how-albert-woodfox-survived-solitary',
          'http://www.newyorker.com/magazine/2015/12/07/the-refugee-dilemma',
-         'http://www.newyorker.com/magazine/2017/01/16/chairman-spaceman',
          'http://www.newyorker.com/magazine/2015/02/02/son-deceased',
+         'http://www.newyorker.com/magazine/2014/07/21/wrong-answer',
 
+         # newyorker - fiction
+         'http://www.newyorker.com/magazine/2017/01/30/quarantine-by-alex-ohlin',
+         'http://www.newyorker.com/magazine/2017/01/16/chairman-spaceman',
+         'http://www.newyorker.com/magazine/2017/01/09/on-the-street-where-you-live',
+
+         # ny books
          'http://www.nybooks.com/articles/2016/05/26/our-awful-prisons-how-they-can-be-changed/',
          'http://www.nybooks.com/articles/2015/12/03/satan-salem/',
          'http://www.nybooks.com/articles/2016/08/18/mystery-of-hieronymus-bosch/',
@@ -46,6 +53,7 @@ DATA_SOURCES = {
          'http://foreignpolicy.com/2016/11/10/the-dance-of-the-dunces-trump-clinton-election-republican-democrat/',
          'https://www.scientificamerican.com/article/darwins-influence-on-modern-thought/',
 
+         # philosophy
          'https://plato.stanford.edu/entries/self-reference/',
          'https://plato.stanford.edu/entries/truth/',
          'https://plato.stanford.edu/entries/reference/',
@@ -69,6 +77,7 @@ DATA_SOURCES = {
          'https://www.thesun.co.uk/tvandshowbiz/2419251/strictly-come-dancing-dancer-gorka-marquez-fiancee-lauren-sheridan-split-blackpool-attack/',
          'https://www.thesun.co.uk/tvandshowbiz/2463681/katie-price-says-shell-take-legal-action-against-hotel-that-ejected-her-after-theft-of-100k-diamonds/',
          'https://www.thesun.co.uk/living/2510773/ill-help-you-kick-worlds-most-dangerous-drug-sugar-says-top-hypnotist-paul-mckenna/',
+         'https://www.thesun.co.uk/tvandshowbiz/2780949/we-take-a-first-glimpse-at-fifty-shades-darker-which-is-far-kinkier-than-the-original-and-almost-pornographic-at-times/',
          'http://www.creationism.org/english/marriage_en.htm',
          'http://liveanddare.com/contemplative-prayer-and-christian-meditation',
          'http://www.bodybuilding.com/content/layne-nortons-hard-truths-of-training-and-nutrition.html',
@@ -95,7 +104,7 @@ TEST_SOURCES = {
 
 MIN_TEXT_LEN = 1000
 
-fetcher = Fetcher(cache=True, cache_ttl=timedelta.max, refetch_prob=0.01)
+fetcher = Fetcher(cache=True, cache_ttl=timedelta.max, refetch_prob=0.000001)
 
 # TODO: handle file sources
 def extract(html):
