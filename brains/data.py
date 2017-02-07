@@ -35,6 +35,7 @@ DATA_SOURCES = {
          'http://www.newyorker.com/magazine/2015/12/07/the-refugee-dilemma',
          'http://www.newyorker.com/magazine/2015/02/02/son-deceased',
          'http://www.newyorker.com/magazine/2014/07/21/wrong-answer',
+         'http://www.newyorker.com/magazine/2017/02/13/when-things-go-missing',
 
          # newyorker - fiction
          'http://www.newyorker.com/magazine/2017/01/30/quarantine-by-alex-ohlin',
@@ -104,7 +105,7 @@ TEST_SOURCES = {
 
 MIN_TEXT_LEN = 1000
 
-fetcher = Fetcher(cache=True, cache_ttl=timedelta.max, refetch_prob=0.000001)
+fetcher = Fetcher(cache=True, cache_ttl=timedelta.max, refetch_prob=0)
 
 # TODO: handle file sources
 def extract(html):
