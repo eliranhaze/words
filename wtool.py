@@ -70,8 +70,7 @@ def rank(word):
         label = re.findall('label: \'([ %\w]+)', response)[0]
         _print_wrap(word)
         print 'score: %.1f' % score
-        print 'rank: %d' % place
-        print label.lower()
+        print 'rank: %d (%s)' % (place, label.lower())
     except:
         print '%r not found' % word
 
@@ -112,15 +111,26 @@ def dt(x):
     text += '\n'
     return text
 
+def sn(x):
+    text = x.text
+    first = text[0]
+    indent = 0
+    if first.isalpha():
+        indent = 2
+    elif first == '(':
+        indent = 4
+    return '%s%s. ' % (' ' * indent, text)
+
 tags = {
-    'vt': lambda x: '\ndefinition [%s]\n\n' % x.text,
-    'sn': lambda x: '%s%s. ' % ('' if x.text[0].isdigit() else '  ', x.text),
     'dt': dt,
+    'sn': sn,
+    'vt': lambda x: '\ndefinition [%s]\n\n' % x.text,
     'sd': lambda x: '  -- %s: ' % x.text,
     'ss': lambda x: 'synonym: %s\n' % x.text,
     'sx': lambda x: x.text,
     'fw': lambda x: x.text,
     'vi': lambda x: '<%s>' % x.text,
+    'd_link': lambda x: x.text,
 }
 
 def _extract(tag):
@@ -135,21 +145,6 @@ def _print_def(df):
             text += _extract(c)
     print text
 
-def _print_def2(df):
-    vt = df.find('vt')
-    print 'definition%s' % (' [%s]' % vt.text if vt else '')
-    sns = [sn.text for sn in df.find_all('sn')]
-    dts = [dt.text for dt in df.find_all('dt')]
-    if not sns:
-        if len(dts) == 1:
-            sns = ['1']
-    if len(sns) != len(dts):
-        print 'warning: %d sns %d dts' % (len(sns), len(dts))
-        return
-    for sn, dt in zip(sns, dts):
-        sn = sn if sn[0].isdigit() else '  %s' % sn
-        print '%s. %s' % (sn, dt)
-    
 def check():
     words = read_file()
     extras = set(w.get_extras(words))
