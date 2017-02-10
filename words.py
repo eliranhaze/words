@@ -19,7 +19,12 @@ def _textify(text):
 
 def get_words():
     words = [_wordify(s) for s in open(WORDFILE).read().splitlines()]
-    print 'read', len(words), 'words'
+    extras = get_extras(words)
+    wset = set(words + extras)
+    print 'read %d words, formed %d total' % (len(words), len(wset))
+    return wset
+
+def get_extras(words):
     extras = []
     for word in words:
         last = word[-1]
@@ -42,7 +47,7 @@ def get_words():
             extras.append(word[:-1] + 'ce')
         elif word[-2:] == 'ce':
             extras.append(word[:-2] + 't')
-    return set(words + extras)
+    return extras
 
 def find_words(text_words):
     found = []

@@ -1,16 +1,16 @@
 import argparse
-import words
+import words as w
 
-wfile = words.WORDFILE
+wfile = w.WORDFILE
 
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--add', dest='add')
     parser.add_argument('--remove', dest='remove')
+    parser.add_argument('--check', dest='check', action='store_true')
     args = parser.parse_args()
-    if not args.add and not args.remove:
-        print 'argument required'
-        exit()
+    if not any(vars(args).values()):
+        parser.error('args required')
     return args
 
 def read_file():
@@ -29,6 +29,10 @@ def add(word):
     if word in words:
         print '%r already exists' % word
         return
+    extras = w.get_extras(words)
+    if word in extras:
+        print '%r is in extras' % word
+        return
     words.append(word)
     write_file(sorted(words))
  
@@ -39,6 +43,13 @@ def remove(word):
         return
     words.remove(word)
     write_file(words)
+
+def check():
+    words = read_file()
+    extras = set(w.get_extras(words))
+    for word in words:
+        if word in extras:
+            print '%r is in extras' % word
     
 def main():
 
@@ -47,6 +58,8 @@ def main():
         add(args.add)
     elif args.remove:
         remove(args.remove)
+    elif args.check:
+        check()
     else:
         raise ValueError('no args')
 
