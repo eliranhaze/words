@@ -1,7 +1,7 @@
 import argparse
 import re
 import sys
-from bs4 import BeautifulSoup as bs
+from bs4 import BeautifulSoup as bs, element as el
 from datetime import timedelta
 
 import words as w
@@ -79,23 +79,54 @@ def trans(word):
     for entry in entries:
         _print_entry(entry)
 
+def _print_wrap(x, char='='):
+    line = char * len(x) 
+    print line
+    print x
+    print line
+
 def _print_entry(entry):
-    print '---'
-    print entry.get('id')
-    print '---'
+    _print_wrap(entry.get('id'))
+    print
     fl = entry.find('fl')
     hw = entry.find('hw')
     pr = entry.find('pr')
-    print ' | '.join(x.text for x in (fl, hw, pr) if x) 
+    print ' | '.join(x.text for x in (fl, hw, pr) if x)
     for df in entry.find_all('def'):
         _print_def(df)
 
+def dt(x):
+    text = ''
+    for c in x.contents:
+        if type(c) == el.Tag:
+            text += _extract(c)
+        else:
+            text += re.sub('^:', '', unicode(c))
+    text += '\n'
+    return text
+
+tags = {
+    'vt': lambda x: '\ndefinition [%s]\n\n' % x.text,
+    'sn': lambda x: '%s%s. ' % ('' if x.text[0].isdigit() else '  ', x.text),
+    'dt': dt,
+    'sd': lambda x: '  -- %s: ' % x.text,
+    'ss': lambda x: 'synonym: %s\n' % x.text,
+    'sx': lambda x: x.text,
+    'fw': lambda x: x.text,
+    'vi': lambda x: '<%s>' % x.text,
+}
+
+def _extract(tag):
+    return tags[tag.name](tag) if tag.name in tags else ''
+
 def _print_def(df):
-    vt = df.find('vt')
-    print 'definition%s' % (' [%s]' % vt.text if vt else '')
-    dts = [dt.text for dt in df.find_all('dt')]
-    for sn, dt in enumerate(dts, 1):
-        print '%s. %s' % (sn, dt)
+    if not df.find('vt'):
+        print '\ndefinition\n'
+    text = ''
+    for c in df.contents:
+        if type(c) == el.Tag:
+            text += _extract(c)
+    print text
 
 def _print_def2(df):
     vt = df.find('vt')
