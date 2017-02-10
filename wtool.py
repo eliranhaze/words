@@ -1,17 +1,21 @@
 import argparse
 import re
-import requests
 import sys
+from bs4 import BeautifulSoup as bs
+from datetime import timedelta
 
 import words as w
+from utils.fetch import Fetcher
 
 wfile = w.WORDFILE
+fetcher = Fetcher(cache=True, cache_ttl=timedelta(days=30))
 
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--add', dest='add')
     parser.add_argument('--remove', dest='remove')
     parser.add_argument('--rank', dest='rank')
+    parser.add_argument('--trans', dest='trans')
     parser.add_argument('--check', dest='check', action='store_true')
     args = parser.parse_args()
     if not any(vars(args).values()):
@@ -28,6 +32,9 @@ def write_file(word_list):
         for word in word_list:
             f.write('%s\n' % word)
     print 'written %d words to %s' % (len(word_list), wfile)
+
+def fetch(url):
+    return fetcher.fetch(url).content
 
 def add(word):
     words = read_file()
@@ -51,17 +58,60 @@ def remove(word):
 
 def rank(word):
     url = 'https://stats.merriam-webster.com/pop-score-redesign.php?word=%s&t=1486731097964&id=popularity-score' % word
-    response = requests.get(url)
+    response = fetch(url)
     try:
-        score = float(re.findall('pop_score_float: (\d+\.\d+)', response.content)[0])
-        place = int(re.findall('actual_rank: \'(\d+)\'', response.content)[0])
-        label = re.findall('label: \'([ %\w]+)', response.content)[0]
+        score = float(re.findall('pop_score_float: (\d+\.\d+)', response)[0])
+        place = int(re.findall('actual_rank: \'(\d+)\'', response)[0])
+        label = re.findall('label: \'([ %\w]+)', response)[0]
         print 'score: %.1f' % score
         print 'rank: %d' % place
         print label
     except:
         print '%r not found' % word
 
+def trans(word):
+    url = 'http://www.dictionaryapi.com/api/v1/references/collegiate/xml/%s?key=10217acd-6a42-413f-a9ca-7975ae89c32d' % word
+    response = fetch(url)
+    try:
+        entries = bs(response).find_all('entry')
+    except:
+        print '%r not found' % word
+    for entry in entries:
+        _print_entry(entry)
+
+def _print_entry(entry):
+    print '---'
+    print entry.get('id')
+    print '---'
+    fl = entry.find('fl')
+    hw = entry.find('hw')
+    pr = entry.find('pr')
+    print ' | '.join(x.text for x in (fl, hw, pr) if x) 
+    for df in entry.find_all('def'):
+        _print_def(df)
+
+def _print_def(df):
+    vt = df.find('vt')
+    print 'definition%s' % (' [%s]' % vt.text if vt else '')
+    dts = [dt.text for dt in df.find_all('dt')]
+    for sn, dt in enumerate(dts, 1):
+        print '%s. %s' % (sn, dt)
+
+def _print_def2(df):
+    vt = df.find('vt')
+    print 'definition%s' % (' [%s]' % vt.text if vt else '')
+    sns = [sn.text for sn in df.find_all('sn')]
+    dts = [dt.text for dt in df.find_all('dt')]
+    if not sns:
+        if len(dts) == 1:
+            sns = ['1']
+    if len(sns) != len(dts):
+        print 'warning: %d sns %d dts' % (len(sns), len(dts))
+        return
+    for sn, dt in zip(sns, dts):
+        sn = sn if sn[0].isdigit() else '  %s' % sn
+        print '%s. %s' % (sn, dt)
+    
 def check():
     words = read_file()
     extras = set(w.get_extras(words))
@@ -78,6 +128,8 @@ def main():
         remove(args.remove)
     elif args.rank:
         rank(args.rank)
+    elif args.trans:
+        trans(args.trans)
     elif args.check:
         check()
     else:
