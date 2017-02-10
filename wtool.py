@@ -1,4 +1,6 @@
 import argparse
+import sys
+
 import words as w
 
 wfile = w.WORDFILE
@@ -28,7 +30,7 @@ def add(word):
     words = read_file()
     if word in words:
         print '%r already exists' % word
-        return
+        sys.exit(1)
     extras = w.get_extras(words)
     if word in extras:
         print '%r is in extras' % word
@@ -40,7 +42,7 @@ def remove(word):
     words = read_file()
     if word not in words:
         print '%r does not exist' % word
-        return
+        sys.exit(1)
     words.remove(word)
     write_file(words)
 
