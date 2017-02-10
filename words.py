@@ -44,12 +44,11 @@ def get_words():
             extras.append(word[:-2] + 't')
     return set(words + extras)
 
-WORDS = get_words()
-
 def find_words(text_words):
     found = []
+    words = get_words()
     for w in text_words:
-        if w in WORDS and found.count(w) < MAX_WORD_REPEAT:
+        if w in words and found.count(w) < MAX_WORD_REPEAT:
             found.append(w)
     return found
 
