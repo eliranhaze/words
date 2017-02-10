@@ -63,9 +63,10 @@ def rank(word):
         score = float(re.findall('pop_score_float: (\d+\.\d+)', response)[0])
         place = int(re.findall('actual_rank: \'(\d+)\'', response)[0])
         label = re.findall('label: \'([ %\w]+)', response)[0]
+        _print_wrap(word)
         print 'score: %.1f' % score
         print 'rank: %d' % place
-        print label
+        print label.lower()
     except:
         print '%r not found' % word
 
@@ -76,6 +77,7 @@ def trans(word):
         entries = bs(response).find_all('entry')
     except:
         print '%r not found' % word
+    print
     for entry in entries:
         _print_entry(entry)
 
@@ -157,14 +159,12 @@ def main():
         add(args.add)
     elif args.remove:
         remove(args.remove)
-    elif args.rank:
+    if args.rank:
         rank(args.rank)
-    elif args.trans:
+    if args.trans:
         trans(args.trans)
-    elif args.check:
+    if args.check:
         check()
-    else:
-        raise ValueError('no args')
 
 if __name__ == '__main__':
     main()
