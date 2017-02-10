@@ -17,11 +17,12 @@ def _textify(text):
     # in the pattern '+' is not needed because of the split
     return re.sub('\W', ' ', text).lower().split()
 
-def get_words():
+def get_words(silent=False):
     words = [_wordify(s) for s in open(WORDFILE).read().splitlines()]
     extras = get_extras(words)
     wset = set(words + extras)
-    print 'read %d words, formed %d total' % (len(words), len(wset))
+    if not silent:
+        print 'read %d words, formed %d total' % (len(words), len(wset))
     return wset
 
 def get_extras(words):

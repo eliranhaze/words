@@ -14,6 +14,7 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--add', dest='add')
     parser.add_argument('--remove', dest='remove')
+    parser.add_argument('--exists', dest='exists')
     parser.add_argument('--rank', dest='rank')
     parser.add_argument('--trans', dest='trans')
     parser.add_argument('--check', dest='check', action='store_true')
@@ -44,7 +45,7 @@ def add(word):
     extras = w.get_extras(words)
     if word in extras:
         print '%r is in extras' % word
-        return
+        sys.exit(1)
     words.append(word)
     write_file(sorted(words))
  
@@ -55,6 +56,10 @@ def remove(word):
         sys.exit(1)
     words.remove(word)
     write_file(words)
+
+def exists(word):
+    words = w.get_words(silent=True)
+    print '%r is %slisted' % (word, '' if word in words else 'un')
 
 def rank(word):
     url = 'https://stats.merriam-webster.com/pop-score-redesign.php?word=%s&t=1486731097964&id=popularity-score' % word
@@ -163,6 +168,8 @@ def main():
         rank(args.rank)
     if args.trans:
         trans(args.trans)
+    if args.exists:
+        exists(args.exists)
     if args.check:
         check()
 
