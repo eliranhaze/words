@@ -108,7 +108,7 @@ def dt(x):
         if type(c) == el.Tag:
             text += _extract(c)
         else:
-            text += re.sub('^:', '', unicode(c))
+            text += c
     text += '\n'
     return text
 
