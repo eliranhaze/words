@@ -1,4 +1,6 @@
 import argparse
+import re
+import requests
 import sys
 
 import words as w
@@ -9,6 +11,7 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--add', dest='add')
     parser.add_argument('--remove', dest='remove')
+    parser.add_argument('--rank', dest='rank')
     parser.add_argument('--check', dest='check', action='store_true')
     args = parser.parse_args()
     if not any(vars(args).values()):
@@ -46,6 +49,19 @@ def remove(word):
     words.remove(word)
     write_file(words)
 
+def rank(word):
+    url = 'https://stats.merriam-webster.com/pop-score-redesign.php?word=%s&t=1486731097964&id=popularity-score' % word
+    response = requests.get(url)
+    try:
+        score = float(re.findall('pop_score_float: (\d+\.\d+)', response.content)[0])
+        place = int(re.findall('actual_rank: \'(\d+)\'', response.content)[0])
+        label = re.findall('label: \'([ %\w]+)', response.content)[0]
+        print 'score: %.1f' % score
+        print 'rank: %d' % place
+        print label
+    except:
+        print '%r not found' % word
+
 def check():
     words = read_file()
     extras = set(w.get_extras(words))
@@ -60,6 +76,8 @@ def main():
         add(args.add)
     elif args.remove:
         remove(args.remove)
+    elif args.rank:
+        rank(args.rank)
     elif args.check:
         check()
     else:
