@@ -162,9 +162,10 @@ tags = {
     'ss': lambda x: 'synonym: %s\n' % x.text,
     'sx': lambda x: '[%s]' % x.text,
     'vi': lambda x: '<%s>' % x.text,
-    'fl': lambda x: '| %s' % x.text,
+    'fl': lambda x: ' | %s' % x.text,
+    'pr': lambda x: ' | %s' % x.text,
     'fw': lambda x: '%s' % x.text,
-    'ure': lambda x: u'  —%s ' % x.text.replace('*',''),
+    'ure': lambda x: u'  —%s' % x.text.replace('*',''),
     'd_link': lambda x: x.text,
 }
 
