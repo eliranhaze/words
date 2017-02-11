@@ -82,8 +82,10 @@ def trans(word):
     except:
         print '%r not found' % word
     print
+    main_word = entries[0].get('id').split('[')[0]
     for entry in entries:
         _print_entry(entry)
+    return main_word
 
 def _print_wrap(x, char='='):
     line = char * len(x) 
@@ -127,9 +129,9 @@ tags = {
     'vt': lambda x: '\ndefinition [%s]\n\n' % x.text,
     'sd': lambda x: '  -- %s: ' % x.text,
     'ss': lambda x: 'synonym: %s\n' % x.text,
-    'sx': lambda x: x.text,
-    'fw': lambda x: x.text,
+    'sx': lambda x: '[%s]' % x.text,
     'vi': lambda x: '<%s>' % x.text,
+    'fw': lambda x: x.text,
     'd_link': lambda x: x.text,
 }
 
@@ -155,18 +157,25 @@ def check():
 def main():
 
     args = get_args()
+
     if args.add:
         add(args.add)
     elif args.remove:
         remove(args.remove)
-    if args.rank:
-        rank(args.rank)
-    if args.trans:
-        trans(args.trans)
-    if args.exists:
-        exists(args.exists)
-    if args.check:
+    elif args.check:
         check()
+
+    main_word = None
+    if args.trans:
+        main_word = trans(args.trans)
+    if args.rank:
+        rank(main_word if main_word else args.rank)
+    if args.exists:
+        if main_word:
+            print
+            exists(main_word)
+        if args.exists != main_word:
+            exists(args.exists)
 
 if __name__ == '__main__':
     main()
