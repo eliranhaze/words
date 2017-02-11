@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import argparse
 import re
 import sys
@@ -74,6 +75,9 @@ def rank(word):
     except:
         print '%r not found' % word
 
+#######################################################################################################
+# translation
+
 def trans(word):
     url = 'http://www.dictionaryapi.com/api/v1/references/collegiate/xml/%s?key=10217acd-6a42-413f-a9ca-7975ae89c32d' % word
     response = fetch(url)
@@ -111,16 +115,34 @@ def _print_entry(entry):
     print ' | '.join(x.text for x in (fl, hw, pr) if x)
     for df in entry.find_all('def'):
         _print_def(df)
+    _print_uros(entry)
 
-def dt(x):
+def _print_def(df):
+    if not df.find('vt'):
+        print '\ndefinition\n'
+    print _extract_tags(df.contents)
+
+def _print_uros(entry):
+    uros = entry.find_all('uro')
+    if uros:
+        for uro in uros:
+            _print_uro(uro)
+        print
+
+def _print_uro(uro):
+    print _extract_tags(uro.contents)
+
+def _extract_tags(contents, else_func=None):
     text = ''
-    for c in x.contents:
+    for c in contents:
         if type(c) == el.Tag:
             text += _extract(c)
-        else:
-            text += c
-    text += '\n'
+        elif else_func:
+            text += else_func(c)
     return text
+
+def dt(x):
+    return '%s\n' % _extract_tags(x.contents, lambda c: c)
 
 def sn(x):
     text = x.text
@@ -140,21 +162,16 @@ tags = {
     'ss': lambda x: 'synonym: %s\n' % x.text,
     'sx': lambda x: '[%s]' % x.text,
     'vi': lambda x: '<%s>' % x.text,
-    'fw': lambda x: x.text,
+    'fl': lambda x: '| %s' % x.text,
+    'fw': lambda x: '%s' % x.text,
+    'ure': lambda x: u'  —%s ' % x.text.replace('*',''),
     'd_link': lambda x: x.text,
 }
 
 def _extract(tag):
     return tags[tag.name](tag) if tag.name in tags else ''
 
-def _print_def(df):
-    if not df.find('vt'):
-        print '\ndefinition\n'
-    text = ''
-    for c in df.contents:
-        if type(c) == el.Tag:
-            text += _extract(c)
-    print text
+#######################################################################################################
 
 def check():
     words = read_file()
