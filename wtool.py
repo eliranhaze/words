@@ -165,6 +165,7 @@ tags = {
     'fl': lambda x: ' | %s' % x.text,
     'pr': lambda x: ' | %s' % x.text,
     'fw': lambda x: '%s' % x.text,
+    'un': lambda x: u'—%s' % _extract_tags(x.contents, lambda c: c),
     'ure': lambda x: u'  —%s' % x.text.replace('*',''),
     'd_link': lambda x: x.text,
 }
