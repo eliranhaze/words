@@ -77,21 +77,30 @@ def rank(word):
 def trans(word):
     url = 'http://www.dictionaryapi.com/api/v1/references/collegiate/xml/%s?key=10217acd-6a42-413f-a9ca-7975ae89c32d' % word
     response = fetch(url)
-    try:
-        entries = bs(response).find_all('entry')
-    except:
+    soup = bs(response)
+    entries = soup.find_all('entry')
+    if entries:
+        print
+        for entry in entries:
+            _print_entry(entry)
+        return entries[0].get('id').split('[')[0] # main word
+    else:
         print '%r not found' % word
-    print
-    main_word = entries[0].get('id').split('[')[0]
-    for entry in entries:
-        _print_entry(entry)
-    return main_word
+        _print_suggestions(soup)
 
 def _print_wrap(x, char='='):
     line = char * len(x) 
     print line
     print x
     print line
+
+def _print_suggestions(soup):
+    sugs = soup.find_all('suggestion')
+    if sugs:
+        print
+        print 'suggestions:'
+        for sug in soup.find_all('suggestion'):
+            print sug.text 
 
 def _print_entry(entry):
     _print_wrap(entry.get('id'))
@@ -169,12 +178,19 @@ def main():
     if args.trans:
         main_word = trans(args.trans)
     if args.rank:
-        rank(main_word if main_word else args.rank)
+        if args.trans:
+            if main_word:
+                rank(main_word)
+        else:
+            rank(args.rank)
     if args.exists:
-        if main_word:
-            print
-            exists(main_word)
-        if args.exists != main_word:
+        if args.trans:
+            if main_word:
+                print
+                exists(main_word)
+                if args.exists != main_word:
+                    exists(args.exists)
+        else:
             exists(args.exists)
 
 if __name__ == '__main__':
