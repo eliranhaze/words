@@ -42,6 +42,7 @@ DATA_SOURCES = {
          'http://www.newyorker.com/magazine/2017/01/30/quarantine-by-alex-ohlin',
          'http://www.newyorker.com/magazine/2017/01/16/chairman-spaceman',
          'http://www.newyorker.com/magazine/2017/01/09/on-the-street-where-you-live',
+         'http://www.newyorker.com/magazine/2004/03/22/passion-8',
 
          # ny books
          'http://www.nybooks.com/articles/2016/05/26/our-awful-prisons-how-they-can-be-changed/',
