@@ -8,6 +8,9 @@ from utils.fetch import Fetcher
 from utils.minify import minify_html
 from utils.text import extract_text
 
+from utils.logger import get_logger
+logger = get_logger('brains.data')
+
 DATA_SOURCES = {
     1: [
          # newyorker - articles
@@ -121,7 +124,7 @@ def to_text(sources):
         if len(text) >= MIN_TEXT_LEN:
             texts.append(extract(response.content))
         else:
-            print '*** warning: text len %d<%d (url=%s) ***' % (len(text), MIN_TEXT_LEN, response.url)
+            logger.warning('*** warning: text len %d<%d (url=%s) ***', len(text), MIN_TEXT_LEN, response.url)
     return texts
 
 def get():
@@ -132,5 +135,5 @@ def get():
         for text in to_text(sources):
             data.append(text)
             target.append(cls)
-    print 'got %d/%d data items in %.1fs' % (len(data), sum(len(sources) for sources in DATA_SOURCES.itervalues()), time.time()-t1)
+    logger.info('got %d/%d data items in %.1fs', len(data), sum(len(sources) for sources in DATA_SOURCES.itervalues()), time.time()-t1)
     return data, target

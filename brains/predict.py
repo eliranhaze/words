@@ -7,6 +7,9 @@ from sklearn.pipeline import Pipeline
 
 from data import get as get_data, DATA_SOURCES
 
+from utils.logger import get_logger
+logger = get_logger('brains.predict')
+
 class Prediction(object):
 
     PKL = '.prediction.pkl'
@@ -37,15 +40,18 @@ class Prediction(object):
        
     @classmethod
     def load(cls):
+        logger.debug('loading classifier')
         if os.path.exists(cls.PKL) and os.path.exists(cls.PKL_SOURCES):
             last_sources = pkl.load(open(cls.PKL_SOURCES, 'rb'))
             if last_sources == DATA_SOURCES:
                 prediction = pkl.load(open(cls.PKL, 'rb'))
+                logger.debug('classifier unchanged')
                 return prediction
-        print 'creating new classifier'
+        logger.debug('creating a new classifier')
         prediction = cls()
         pkl.dump(prediction, open(cls.PKL, 'wb'))
         pkl.dump(DATA_SOURCES, open(cls.PKL_SOURCES, 'wb'))
+        logger.debug('new classifier created')
         return prediction
 
     def _train(self):

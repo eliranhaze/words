@@ -100,7 +100,7 @@ class Source(object):
                 soup = bs(content)
                 title = soup.find('title')
                 yield self._trim(response.url), title.text if title else '---', self.extract(soup)
-        logger.debug('parsed %d articles', sum(1 for _ in responses if r))
+        logger.debug('parsed %d articles', sum(1 for r in responses if r))
 
     def _trim(self, url):
         url = url.replace('http://','').replace('https://','')
