@@ -84,7 +84,9 @@ class Source(object):
     def urls(self, from_date=None):
         urls_from_feed = FeedUrls(urls=self.FEEDS).get(from_date=from_date)
         urls_from_html = HtmlUrls(urls=self.LINKS_PAGES).get(from_date=from_date)
-        return urls_from_feed.union(urls_from_html).union(self.get_extra_urls())
+        all_urls = urls_from_feed.union(urls_from_html).union(self.get_extra_urls())
+        logger.info('%s: got %d total urls', self, len(all_urls))
+        return all_urls
 
     def get_extra_urls(self):
         return set()
