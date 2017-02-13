@@ -2,6 +2,9 @@ import re
 
 from brains.predict import Prediction
 
+from utils.logger import get_logger
+logger = get_logger('words')
+
 WORDFILE = 'wlist'
 WPM = 125
 MAX_WORD_REPEAT = 3
@@ -25,7 +28,7 @@ def get_words(silent=False):
         extras = get_extras(words)
         wset = set(words + extras)
         if not silent:
-            print 'read %d words, formed %d total' % (len(words), len(wset))
+            logger.debug('read %d words, formed %d total', len(words), len(wset))
         WORDS = wset
     return WORDS
 
@@ -68,7 +71,10 @@ def full_report(text, save=True, list_words=False):
 class Report(object):
 
     def __init__(self, text, save=True, list_words=False):
+        logger.debug('report starting')
+        logger.debug('textifying')
         text_words = _textify(text)
+        logger.debug('finding words')
         found = find_words(text_words)
         if save:
             self.text_words = text_words
@@ -76,10 +82,12 @@ class Report(object):
             self.num_unique_text_words = len(self.unique_text_words)
             self.unique_found = set(found)
         self.num_text_words = len(text_words)
+        logger.debug('predicting')
         self.prediction = self.predictor.predict(text)[1]
         self.found = found
         self.save = save
         self.list_words = list_words
+        logger.debug('report done')
 
     @property
     def predictor(self):

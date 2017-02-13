@@ -52,6 +52,7 @@ def main():
         words.PRINT_WORDS = True
         words.PRINT_OUT = args.out
 
+    logger.info('generating report')
     report = words.full_report(text, list_words=args.list_words)
     report._print()
     logger.info('done')
