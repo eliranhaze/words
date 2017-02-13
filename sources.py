@@ -9,6 +9,9 @@ from utils.fetch import fetch, multi_fetch, Fetcher
 from utils.minify import minify_feed, minify_html
 from utils.text import extract_text
 
+from utils.logger import get_logger
+logger = get_logger('sources')
+
 ####################################################################################
 # urls
 
@@ -18,11 +21,16 @@ class SourceUrls(object):
         self.urls = urls
 
     def get(self, from_date=None):
+        if not self.urls:
+            return set()
+        logger.info('getting links from %d urls', len(self.urls))
         url_list = []
         responses = self.fetcher.multi_fetch(self.urls)
         for response in responses:
             url_list.extend(self._parse_urls(response.content, from_date))
-        return set(url_list)
+        urls = set(url_list)
+        logger.info('got %d unique links', len(urls))
+        return urls
 
     def _parse_urls(self, content, from_date=None):
         raise NotImplementedError
@@ -49,8 +57,13 @@ class HtmlUrls(SourceUrls):
     fetcher = Fetcher(cache=True, cache_ttl=timedelta(hours=5), processor=None)
 
     def _parse_urls(self, content, from_date=None):
+        links = []
         if content:
-            return [a.get('href') for a in bs(content).find_all('a')]
+            for a in bs(content).find_all('a'):
+                href = a.get('href')
+                if href and 'mp3' not in href:
+                    links.append(re.sub('/$', '', href))
+        return links
 
 ####################################################################################
 # sources
@@ -61,6 +74,7 @@ class Source(object):
     LINKS_PAGES = []
 
     def __init__(self, feeds=None, links_pages=None):
+        logger.info('initializing source')
         self.html_fetcher = Fetcher(cache=True, cache_ttl=timedelta(days=365), processor=minify_html)
         if feeds:
             self.FEEDS = feeds
@@ -75,27 +89,18 @@ class Source(object):
     def get_extra_urls(self):
         return set()
 
-    def _get_links(self, feed, from_date=None):
-        links = []
-        if feed:
-            for entry in feed['entries']:
-                if from_date:
-                    published_parsed = entry.get('published_parsed')
-                    published_date = datetime.fromtimestamp(time.mktime(published_parsed)) if published_parsed else None
-                    if published_date and published_date < from_date:
-                        continue
-                links.append(entry['link'])
-        return links
-
     def get_articles(self, from_date=None):
         urls = list(self._filter(self.urls(from_date)))
         responses = self.html_fetcher.multi_fetch(urls)
+        logger.debug('parsing articles from %d responses', len(responses))
         for response in responses:
             if response:
+                logger.debug('parsing %s', response.url)
                 content = self._extra_minify(response.content)
                 soup = bs(content)
                 title = soup.find('title')
                 yield self._trim(response.url), title.text if title else '---', self.extract(soup)
+        logger.debug('parsed %d articles', sum(1 for _ in responses if r))
 
     def _trim(self, url):
         url = url.replace('http://','').replace('https://','')

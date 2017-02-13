@@ -17,6 +17,9 @@ import urlparse
 
 from executor import Executor
 
+from logger import get_logger
+logger = get_logger('fetch')
+
 requests.packages.urllib3.disable_warnings()
 
 #########################################################
@@ -54,10 +57,12 @@ class Fetcher(object):
         while True:
             attempt += 1
             try:
-                # TODO: maybe create session everytime? check times
+                logger.debug('request %s attempt=%d', url, attempt)
                 response = self.session.get(url, verify=False, **kwargs)
+                logger.debug('response %s size=%.2fkb elapsed=%.1fms',
+                    response.url, len(response._content)/1024., response.elapsed.total_seconds() * 1000.)
                 if int(response.status_code) == 429:
-                    print 'got %s, slowing down' % response
+                    logger.debug('got %s, slowing down', response)
                     time.sleep(attempt)
                     continue
                 return response
@@ -74,6 +79,7 @@ class Fetcher(object):
         if self.cache and random.random() >= self.refetch_prob:
             cached = self.cache.get(url, params)
             if cached:
+                logger.debug('retrieved %s from cache', url)
                 return Response(url=url, content=cached)
 
     #==============================================

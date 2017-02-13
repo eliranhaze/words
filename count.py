@@ -10,6 +10,9 @@ from utils.text import extract_text
 import warnings
 warnings.filterwarnings("ignore")
 
+from utils.logger import get_logger
+logger = get_logger('count')
+
 fetcher = Fetcher(cache=True, cache_ttl=timedelta(days=30), processor=minify_html)
 
 def get_args():
@@ -30,6 +33,7 @@ def textify_web_content(content):
 
 def main():
 
+    logger.info('starting')
     args = get_args()
     if args.url:
         print 'fetching text from', args.url
@@ -50,6 +54,7 @@ def main():
 
     report = words.full_report(text, list_words=args.list_words)
     report._print()
+    logger.info('done')
 
 if __name__ == '__main__':
     main()
