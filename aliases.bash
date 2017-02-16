@@ -29,7 +29,7 @@ function wurl() {
 }
 
 function wlinks() {
-    python main.py --links $1
+    python main.py --links $1 --console
 }
 
 function wurlc() {
