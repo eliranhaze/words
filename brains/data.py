@@ -100,6 +100,12 @@ DATA_SOURCES = {
          'http://www.cracked.com/blog/the-upside-to-2016-musical-revolution-near/',
          'https://www.yahoo.com/celebrity/23-major-kardashian-jenner-moments-in-2016-013028622.html',
          'http://www.spiritualresearchfoundation.org/hair-down',
+         'http://www.jack-donovan.com/axis/2011/03/violence-is-golden/',
+         'http://www.jack-donovan.com/axis/2011/12/mighty-white/',
+         'http://www.jack-donovan.com/axis/2012/05/vote-with-your-ass/',
+         'http://awdude.com/happy-big-sexy-valentines-day/',
+         'http://awdude.com/thank-celebrities-teaching-think/',
+         'http://awdude.com/ways-resisting-delusional-left/',
     ],
 }
 
