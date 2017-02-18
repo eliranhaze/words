@@ -54,7 +54,7 @@ class FeedUrls(SourceUrls):
 
 class HtmlUrls(SourceUrls):
 
-    fetcher = Fetcher(cache=True, cache_ttl=timedelta(hours=5), processor=None)
+    fetcher = Fetcher(cache=False, processor=None)
 
     def _parse_urls(self, content, from_date=None):
         links = []
