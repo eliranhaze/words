@@ -42,6 +42,7 @@ DATA_SOURCES = {
          'http://www.newyorker.com/magazine/2016/06/06/zarif-khans-tamales-and-the-muslims-of-sheridan-wyoming',
          'http://www.newyorker.com/culture/culture-desk/the-cost-of-defying-the-president',
          'http://www.newyorker.com/magazine/2014/11/17/one-state-reality',
+         'http://www.newyorker.com/magazine/2003/10/06/the-challenge-gabriel-garcia-marquez',
 
          # newyorker - fiction
          'http://www.newyorker.com/magazine/2017/01/30/quarantine-by-alex-ohlin',
