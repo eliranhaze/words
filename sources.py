@@ -1,4 +1,6 @@
 import feedparser
+import json
+import os
 import re
 import time
 
@@ -17,20 +19,21 @@ logger = get_logger('sources')
 
 class SourceUrls(object):
 
-    def __init__(self, urls):
-        self.urls = urls
+    def __init__(self, sources):
+        self.sources = sources
 
     def get(self, from_date=None):
-        if not self.urls:
+        if not self.sources:
             return set()
-        logger.info('getting links from %d urls', len(self.urls))
-        url_list = []
-        responses = self.fetcher.multi_fetch(self.urls)
-        for response in responses:
-            url_list.extend(self._parse_urls(response.content, from_date))
-        urls = set(url_list)
-        logger.info('got %d unique links', len(urls))
+        logger.info('getting urls from %d url sources', len(self.sources))
+        urls = set()
+        for content in self._fetch_contents():
+            urls.update(self._parse_urls(content, from_date))
+        logger.info('got %d unique urls', len(urls))
         return urls
+
+    def _fetch_contents(self):
+        return [r.content for r in self.fetcher.multi_fetch(self.sources)]
 
     def _parse_urls(self, content, from_date=None):
         raise NotImplementedError
@@ -65,6 +68,25 @@ class HtmlUrls(SourceUrls):
                     links.append(re.sub('/$', '', href))
         return links
 
+class BookmarksUrls(SourceUrls):
+
+    def _fetch_contents(self):
+        return [json.load(open(self.bookmarks_file))]
+            
+    def _parse_urls(self, content, from_date=None):
+        # sources are bookmark folder names
+        urls = set()
+        for root in content['roots'].itervalues():
+            if type(root) == dict:
+                for child in root['children']:
+                    if child['type'] == 'folder' and child['name'] in self.sources:
+                        urls.update(bookmark['url'] for bookmark in child['children'])
+        return urls
+
+    @property
+    def bookmarks_file(self):
+        return '%s/.config/google-chrome/Default/Bookmarks' % os.environ['HOME']
+
 ####################################################################################
 # sources
 
@@ -82,8 +104,8 @@ class Source(object):
             self.LINKS_PAGES = links_pages
 
     def urls(self, from_date=None):
-        urls_from_feed = FeedUrls(urls=self.FEEDS).get(from_date=from_date)
-        urls_from_html = HtmlUrls(urls=self.LINKS_PAGES).get(from_date=from_date)
+        urls_from_feed = FeedUrls(self.FEEDS).get(from_date=from_date)
+        urls_from_html = HtmlUrls(self.LINKS_PAGES).get(from_date=from_date)
         all_urls = urls_from_feed.union(urls_from_html).union(self.get_extra_urls())
         logger.info('%s: got %d total urls', self, len(all_urls))
         return all_urls
