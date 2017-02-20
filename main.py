@@ -79,6 +79,7 @@ def get_args():
     parser.add_argument('--hours', type=int, dest='hours')
     parser.add_argument('--feed', dest='feed')
     parser.add_argument('--links', dest='links')
+    parser.add_argument('--bookmarks', dest='bookmarks')
     parser.add_argument('--console', dest='console', action='store_true')
     args = parser.parse_args()
     return args
@@ -96,6 +97,9 @@ def main():
     if args.links:
         source_str = str(args.links)
         sources = [Source(links_pages=[args.links])]
+    if args.bookmarks:
+        source_str = 'bookmarks: %s' % args.bookmarks
+        sources = [Source(bookmarks=[args.bookmarks])]
     else:
         source_str = ','.join([str(s) for s in sources])
 

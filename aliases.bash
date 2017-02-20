@@ -13,7 +13,7 @@ function wrnk() {
 }
 
 function wtrn() {
-    python wtool.py --trans $1 --rank $1 --exists $1
+    python wtool.py --trans "$1" --rank "$1" --exists "$1"
 }
 
 function wtrnc() {
@@ -28,12 +28,16 @@ function wurl() {
     python count.py --url $1
 }
 
+function wurlc() {
+    wurl `getclip`
+}
+
 function wlinks() {
     python main.py --links $1 --console
 }
 
-function wurlc() {
-    wurl `getclip`
+function wbookmarks() {
+    python main.py --bookmarks "$1" --console
 }
 
 alias bd="vi brains/data.py && git add brains/data.py && git commit -m 'training data update' && git push"

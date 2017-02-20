@@ -43,7 +43,7 @@ class FeedUrls(SourceUrls):
     fetcher = Fetcher(cache=True, cache_ttl=timedelta(hours=1), processor=minify_feed)
 
     def _parse_urls(self, content, from_date=None):
-        links = []
+        urls = []
         if content:
             feed = feedparser.parse(content)
             for entry in feed['entries']:
@@ -52,21 +52,21 @@ class FeedUrls(SourceUrls):
                     published_date = datetime.fromtimestamp(time.mktime(published_parsed)) if published_parsed else None
                     if published_date and published_date < from_date:
                         continue
-                links.append(entry['link'])
-        return links
+                urls.append(entry['link'])
+        return urls
 
 class HtmlUrls(SourceUrls):
 
     fetcher = Fetcher(cache=False, processor=None)
 
     def _parse_urls(self, content, from_date=None):
-        links = []
+        urls = []
         if content:
             for a in bs(content).find_all('a'):
                 href = a.get('href')
                 if href and 'mp3' not in href:
-                    links.append(re.sub('/$', '', href))
-        return links
+                    urls.append(re.sub('/$', '', href))
+        return urls
 
 class BookmarksUrls(SourceUrls):
 
@@ -94,19 +94,24 @@ class Source(object):
 
     FEEDS = []
     LINKS_PAGES = []
+    bookmarks = []
 
-    def __init__(self, feeds=None, links_pages=None):
-        logger.info('initializing source')
+    def __init__(self, feeds=None, links_pages=None, bookmarks=None):
+        logger.info('%s: initializing source', self)
         self.html_fetcher = Fetcher(cache=True, cache_ttl=timedelta(days=365), processor=minify_html)
         if feeds:
             self.FEEDS = feeds
         if links_pages:
             self.LINKS_PAGES = links_pages
+        if bookmarks:
+            self.bookmarks = bookmarks
 
     def urls(self, from_date=None):
         urls_from_feed = FeedUrls(self.FEEDS).get(from_date=from_date)
         urls_from_html = HtmlUrls(self.LINKS_PAGES).get(from_date=from_date)
         all_urls = urls_from_feed.union(urls_from_html).union(self.get_extra_urls())
+        if self.bookmarks:
+            all_urls = all_urls.union(BookmarksUrls(self.bookmarks).get())
         logger.info('%s: got %d total urls', self, len(all_urls))
         return all_urls
 
