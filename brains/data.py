@@ -17,6 +17,7 @@ DATA_SOURCES = {
          'http://www.newyorker.com/magazine/2008/04/21/up-and-then-down',
          'http://www.newyorker.com/magazine/2013/02/04/life-at-the-top',
          'http://www.newyorker.com/magazine/2016/08/22/the-race-for-a-zika-vaccine',
+         'http://www.newyorker.com/magazine/2016/06/27/lee-berger-digs-for-bones-and-glory',
          'http://www.newyorker.com/magazine/2016/11/28/obama-reckons-with-a-trump-presidency',
          'http://www.newyorker.com/magazine/2007/04/16/the-interpreter-2',
          'http://www.newyorker.com/news/news-desk/an-american-tragedy-2',
