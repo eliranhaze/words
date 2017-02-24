@@ -39,6 +39,7 @@ def fetch(url):
     return fetcher.fetch(url).content
 
 def add(word):
+    word = word.lower()
     words = read_file()
     if word in words:
         print '%r already exists' % word
@@ -51,6 +52,7 @@ def add(word):
     write_file(sorted(words))
  
 def remove(word):
+    word = word.lower()
     words = read_file()
     if word not in words:
         print '%r does not exist' % word
@@ -59,6 +61,7 @@ def remove(word):
     write_file(words)
 
 def exists(word):
+    word = word.lower()
     words = w.get_words(silent=True)
     print '%r is %slisted' % (word, '' if word in words else 'un')
 
