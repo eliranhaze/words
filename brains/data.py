@@ -50,6 +50,7 @@ DATA_SOURCES = {
          'http://www.newyorker.com/magazine/2017/01/16/chairman-spaceman',
          'http://www.newyorker.com/magazine/2017/01/09/on-the-street-where-you-live',
          'http://www.newyorker.com/magazine/2004/03/22/passion-8',
+         'http://www.newyorker.com/magazine/2009/04/13/the-color-of-shadows',
 
          # ny books
          'http://www.nybooks.com/articles/2016/05/26/our-awful-prisons-how-they-can-be-changed/',
