@@ -58,6 +58,10 @@ DATA_SOURCES = {
          'http://www.nybooks.com/articles/2016/08/18/mystery-of-hieronymus-bosch/',
          'http://www.nybooks.com/articles/2016/09/29/hobbes-spinoza-locke-leibniz-hume-wrestled-new/',
 
+         # ny times
+         'https://www.nytimes.com/2017/02/24/style/modern-love-when-your-greatest-romance-is-friendship.html',
+
+         # 3am
          'http://www.3ammagazine.com/3am/leiter-reports/',
 
          'http://www.theatlantic.com/education/archive/2016/08/across-the-border-and-into-school/496652/',
