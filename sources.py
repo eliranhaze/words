@@ -172,6 +172,11 @@ class NewYorker(Source):
         'http://www.newyorker.com/feed/collection/directors-in-the-archive',
     ]
 
+    def urls(self, *args, **kw):
+        # some nyer urls are problematic
+        urls = super(NewYorker, self).urls(*args, **kw)
+        return set(u.replace('origin.www.newyorker', 'www.newyorker') for u in urls)
+
     def extract(self, soup):
         try:
             return soup.findAll('div', attrs={'class': 'articleBody'})[0].text
