@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import argparse
 import re
+import subprocess
 import sys
 from bs4 import BeautifulSoup as bs, element as el
 from datetime import timedelta
@@ -10,6 +11,11 @@ from utils.fetch import Fetcher
 
 wfile = w.WORDFILE
 fetcher = Fetcher(cache=True, cache_ttl=timedelta(days=30))
+
+MIN_SUGGEST_RANK = 6000
+
+#######################################################################################################
+# utils
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -38,6 +44,26 @@ def write_file(word_list):
 def fetch(url):
     return fetcher.fetch(url).content
 
+def yesno(msg):
+    inp = None
+    y = ['y', 'yes', 'yy', 'yyy', 'ye', 'yea', 'yeah', '']
+    n = ['n', 'no', 'nn', 'nnn','nah', 'nope', 'sorry']
+    while inp not in y + n:
+        inp = raw_input(msg + ' ([y]/n) ').lower()
+    return inp in y
+
+def suggest_add(word):
+    if yesno('add %r?' % word):
+        add(word)
+        git_add(word)
+
+def git_add(word):
+    if subprocess.call(['git', 'add', wfile]) == 0:
+        subprocess.call(['git', 'commit', '-m', 'added %r' % word])
+
+#######################################################################################################
+# commands
+
 def add(word):
     word = word.lower()
     words = read_file()
@@ -48,6 +74,7 @@ def add(word):
     if word in extras:
         print '%r is in extras' % word
         sys.exit(1)
+    print 'adding %r' % word
     words.append(word)
     write_file(sorted(words))
  
@@ -57,13 +84,16 @@ def remove(word):
     if word not in words:
         print '%r does not exist' % word
         sys.exit(1)
+    print 'removing %r' % word
     words.remove(word)
     write_file(words)
 
 def exists(word):
     word = word.lower()
     words = w.get_words(silent=True)
-    print '%r is %slisted' % (word, '' if word in words else 'un')
+    isthere = word in words
+    print '%r is %slisted' % (word, '' if isthere else 'un')
+    return isthere
 
 def rank(word):
     url = 'https://stats.merriam-webster.com/pop-score-redesign.php?word=%s&t=1486731097964&id=popularity-score' % word
@@ -75,9 +105,17 @@ def rank(word):
         _print_wrap(word)
         print 'score: %.1f' % score
         print 'rank: %d (%s)' % (place, label.lower())
+        return place
     except:
         print '%r not found' % word
 
+def check():
+    words = read_file()
+    extras = set(w.get_extras(words))
+    for word in words:
+        if word in extras:
+            print '%r is in extras' % word
+    
 #######################################################################################################
 # translation
 
@@ -180,13 +218,6 @@ def _extract(tag):
 
 #######################################################################################################
 
-def check():
-    words = read_file()
-    extras = set(w.get_extras(words))
-    for word in words:
-        if word in extras:
-            print '%r is in extras' % word
-    
 def main():
 
     args = get_args()
@@ -199,23 +230,19 @@ def main():
         check()
 
     main_word = None
+    word_rank = None
     if args.trans:
         main_word = trans(args.trans)
     if args.rank:
-        if args.trans:
-            if main_word:
-                rank(main_word)
-        else:
-            rank(args.rank)
+        word = main_word if main_word else args.rank
+        word_rank = rank(word)
     if args.exists:
-        if args.trans:
-            if main_word:
-                print
-                exists(main_word)
-                if args.exists != main_word:
-                    exists(args.exists)
-        else:
+        word = main_word if main_word else args.exists
+        isthere = exists(word)
+        if main_word and args.exists != main_word:
             exists(args.exists)
+        if not isthere and word_rank and word_rank <= MIN_SUGGEST_RANK:
+            suggest_add(word)
 
 if __name__ == '__main__':
     main()
