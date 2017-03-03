@@ -90,7 +90,7 @@ def remove(word):
 
 def exists(word):
     word = word.lower()
-    words = w.get_words(silent=True)
+    words = w.get_words()
     isthere = word in words
     print '%r is %slisted' % (word, '' if isthere else 'un')
     return isthere

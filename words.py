@@ -21,14 +21,13 @@ def _textify(text):
     return re.sub('\W', ' ', text).lower().split()
 
 WORDS = set()
-def get_words(silent=False):
+def get_words():
     global WORDS
     if not WORDS:
         words = [_wordify(s) for s in open(WORDFILE).read().splitlines()]
         extras = get_extras(words)
         wset = set(words + extras)
-        if not silent:
-            logger.debug('read %d words, formed %d total', len(words), len(wset))
+        logger.debug('read %d words, formed %d total', len(words), len(wset))
         WORDS = wset
     return WORDS
 
@@ -38,6 +37,7 @@ def get_extras(words):
         last = word[-1]
         extras.append(word + 's')
         extras.append(word + 'ly')
+        extras.append(word + 'ness')
         if last == 'y':
             extras.append(word[:-1] + 'ies')
             extras.append(word[:-1] + 'ied')
