@@ -142,7 +142,6 @@ def _print_wrap(x, char='='):
 def _print_suggestions(soup):
     sugs = soup.find_all('suggestion')
     if sugs:
-        print
         print 'suggestions:'
         for sug in soup.find_all('suggestion'):
             print sug.text 
