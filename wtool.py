@@ -99,7 +99,7 @@ def rank(word):
     url = 'https://stats.merriam-webster.com/pop-score-redesign.php?word=%s&t=1486731097964&id=popularity-score' % word
     response = fetch(url)
     try:
-        score = float(re.findall('pop_score_float: (\d+\.?\d+)', response)[0])
+        score = float(re.findall('pop_score_float: (\d+\.?\d*)', response)[0])
         place = int(re.findall('actual_rank: \'(\d+)\'', response)[0])
         label = re.findall('label: \'([ %\w]+)', response)[0]
         _print_wrap(word)
