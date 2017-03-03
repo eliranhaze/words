@@ -104,7 +104,7 @@ def rank(word):
         label = re.findall('label: \'([ %\w]+)', response)[0]
         _print_wrap(word)
         print 'score: %.1f' % score
-        print 'rank: %d (%s)' % (place, label.lower())
+        print 'rank: %d (%s)%s' % (place, label.lower(), ' [trending]' if place == 0 and score == 100 else '')
         return place
     except:
         print '%r not found' % word
