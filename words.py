@@ -6,7 +6,8 @@ from utils.logger import get_logger
 logger = get_logger('words')
 
 WORDFILE = 'wlist'
-WPM = 125
+WPM = 125.
+READING_LEN_EXP = 1.025
 MAX_WORD_REPEAT = 3
 
 PRINT_WORDS = False
@@ -99,7 +100,7 @@ class Report(object):
 
     @property
     def reading_minutes(self):
-        return self.num_text_words * 1. / WPM
+        return (self.num_text_words / WPM) ** READING_LEN_EXP
 
     @property
     def reading_time(self):
