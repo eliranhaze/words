@@ -35,9 +35,12 @@ def main():
 
     logger.info('starting')
     args = get_args()
+    text = ''
     if args.url:
         print 'fetching text from', args.url
-        text = textify_web_content(fetcher.fetch(args.url, verify=False).content)
+        response = fetcher.fetch(args.url, verify=False)
+        if response:
+            text = textify_web_content(response.content)
     elif args.file:
         print 'reading file', args.file
         text = open(args.file).read()
@@ -46,6 +49,10 @@ def main():
         text = args.input
     else:
         raise ValueError('no args')
+
+    if not text:
+        print 'no text'
+        return
 
     if args.out:
         print 'with output'
