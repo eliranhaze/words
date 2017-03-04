@@ -61,6 +61,7 @@ DATA_SOURCES = {
 
          # ny times
          'https://www.nytimes.com/2017/02/24/style/modern-love-when-your-greatest-romance-is-friendship.html',
+         'https://www.nytimes.com/2017/02/08/magazine/the-preacher-and-the-sheriff.html',
 
          # 3am
          'http://www.3ammagazine.com/3am/leiter-reports/',
