@@ -25,12 +25,27 @@ requests.packages.urllib3.disable_warnings()
 #########################################################
 # utils
 
+CONTENT_TYPES = {
+    'text/html',
+    'text/plain',
+    'text/xml',
+    'xml',
+    'application/json',
+}
+
 def _is_valid_url(url):
     try:
         parse = urlparse.urlparse(url)
         return parse.scheme and parse.netloc
     except:
         return False
+
+def _is_ok_content_type(response):
+    content_type = response.headers.get('Content-Type')
+    if content_type:
+        content_type = content_type.split(';')[0]
+        return content_type in CONTENT_TYPES
+    return False
 
 #########################################################
 # main objects
@@ -65,6 +80,9 @@ class Fetcher(object):
                 response = self.session.get(url, verify=False, **kwargs)
                 logger.debug('response %s size=%.2fkb elapsed=%.1fms',
                     response.url, len(response._content)/1024., response.elapsed.total_seconds() * 1000.)
+                if not _is_ok_content_type(response):
+                    logger.warning('skipping content type %s', response.url)
+                    return
                 if int(response.status_code) == 429:
                     logger.debug('got %s, slowing down', response)
                     time.sleep(attempt)

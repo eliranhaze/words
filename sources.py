@@ -58,13 +58,18 @@ class FeedUrls(SourceUrls):
 class HtmlUrls(SourceUrls):
 
     fetcher = Fetcher(cache=False, processor=None)
+    ignore_suffixes = [
+        '.mp3',
+        '.pdf',
+        '.wav',
+    ]
 
     def _parse_urls(self, content, from_date=None):
         urls = []
         if content:
             for a in bs(content).find_all('a'):
                 href = a.get('href')
-                if href and 'mp3' not in href:
+                if href and not any(href.endswith(suffix) for suffix in self.ignore_suffixes):
                     urls.append(re.sub('/$', '', href))
         return urls
 
