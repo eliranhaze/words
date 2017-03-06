@@ -45,6 +45,7 @@ DATA_SOURCES = {
          'http://www.newyorker.com/magazine/2014/11/17/one-state-reality',
          'http://www.newyorker.com/magazine/2003/10/06/the-challenge-gabriel-garcia-marquez',
          'http://www.newyorker.com/magazine/2017/03/06/trump-putin-and-the-new-cold-war',
+         'http://www.newyorker.com/tech/elements/what-do-you-call-the-last-of-a-species',
 
          # newyorker - fiction
          'http://www.newyorker.com/magazine/2017/01/30/quarantine-by-alex-ohlin',
