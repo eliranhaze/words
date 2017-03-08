@@ -12,7 +12,7 @@ from utils.fetch import Fetcher
 wfile = w.WORDFILE
 fetcher = Fetcher(cache=True, cache_ttl=timedelta(days=30))
 
-MIN_SUGGEST_RANK = 6000
+MIN_SUGGEST_RANK = 7000
 
 #######################################################################################################
 # utils
