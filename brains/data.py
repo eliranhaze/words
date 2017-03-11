@@ -78,6 +78,9 @@ DATA_SOURCES = {
          'https://plato.stanford.edu/entries/reference/',
     ],
     0: [
+         'http://www.breitbart.com/big-government/2017/03/10/virgil-environmental-protection-agency-next-stop-guided-tour-deep-states-covert-resistance-trump/',
+         'http://www.breitbart.com/big-journalism/2017/03/10/nate-silver-there-really-was-a-liberal-media-bubble',
+         'http://www.breitbart.com/jerusalem/2017/03/06/rabbi-shmuley-midnight-joshuas-tomb-idf/',
          'http://www.dailymail.co.uk/news/article-4041542/Duke-Duchess-Cambridge-spend-private-Christmas-Middleton-family-joining-Queen-Sandringham.html',
          'http://www.dailymail.co.uk/news/article-4041424/It-s-Michael-CATson-Beloved-pet-Scrappy-turns-black-white-diagnosed-similar-skin-pigment-disorder-King-Pop.html',
          'http://www.dailymail.co.uk/tvshowbiz/article-4060958/Has-sherry-Kate-Garraway-accused-DRUNK-GMB-spilling-glass-water-fluffing-lines-speaking-guests.html',
@@ -117,6 +120,9 @@ DATA_SOURCES = {
          'http://awdude.com/happy-big-sexy-valentines-day/',
          'http://awdude.com/thank-celebrities-teaching-think/',
          'http://awdude.com/ways-resisting-delusional-left/',
+         'http://awdude.com/will-conservatives-quit-supporting-leftist-tv-netorks-social-media/',
+         'http://awdude.com/ayatollah-spikes-football-on-obamas-face/',
+         'http://awdude.com/google-will-now-filter-internet-hate-speech/',
     ],
 }
 
