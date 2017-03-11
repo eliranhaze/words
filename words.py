@@ -19,7 +19,7 @@ def _wordify(string, lower=True):
 
 def _textify(text):
     # in the pattern '+' is not needed because of the split
-    return re.sub('\W', ' ', text).lower().split()
+    return filter(lambda w: w.isalpha(), re.sub('\W', ' ', text).lower().split())
 
 WORDS = set()
 def get_words():
