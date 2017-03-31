@@ -47,6 +47,7 @@ DATA_SOURCES = {
          'http://www.newyorker.com/magazine/2017/03/06/trump-putin-and-the-new-cold-war',
          'http://www.newyorker.com/tech/elements/what-do-you-call-the-last-of-a-species',
          'http://www.newyorker.com/magazine/2017/03/13/the-underground-railroad-for-refugees',
+         'http://www.newyorker.com/magazine/2013/08/26/whats-wrong-with-me',
 
          # newyorker - fiction
          'http://www.newyorker.com/magazine/2017/01/30/quarantine-by-alex-ohlin',
