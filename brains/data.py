@@ -50,6 +50,7 @@ DATA_SOURCES = {
          'http://www.newyorker.com/magazine/2013/08/26/whats-wrong-with-me',
          'http://www.newyorker.com/magazine/2017/04/10/death-of-a-dystopian',
          'http://www.newyorker.com/magazine/2017/04/03/ai-versus-md',
+         'http://www.newyorker.com/magazine/2003/01/27/the-old-man-and-the-gun',
 
          # newyorker - fiction
          'http://www.newyorker.com/magazine/2017/01/30/quarantine-by-alex-ohlin',
