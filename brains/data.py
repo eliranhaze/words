@@ -1,11 +1,8 @@
-from bs4 import BeautifulSoup as bs
 from datetime import datetime, timedelta
 
-import requests
 import time
 
 from utils.fetch import Fetcher
-from utils.minify import minify_html
 from utils.text import extract_text
 
 from utils.logger import get_logger
@@ -52,6 +49,7 @@ DATA_SOURCES = {
          'http://www.newyorker.com/magazine/2017/04/03/ai-versus-md',
          'http://www.newyorker.com/magazine/2004/12/13/mysterious-circumstances',
          'http://www.newyorker.com/magazine/2011/04/04/a-murder-foretold',
+         'http://www.newyorker.com/magazine/2014/06/30/stepping-out-3',
 
          # newyorker - fiction
          'http://www.newyorker.com/magazine/2017/01/30/quarantine-by-alex-ohlin',
