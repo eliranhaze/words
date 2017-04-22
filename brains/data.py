@@ -50,6 +50,7 @@ DATA_SOURCES = {
          'http://www.newyorker.com/magazine/2004/12/13/mysterious-circumstances',
          'http://www.newyorker.com/magazine/2011/04/04/a-murder-foretold',
          'http://www.newyorker.com/magazine/2014/06/30/stepping-out-3',
+         'http://www.newyorker.com/magazine/2017/04/24/polar-expressed',
 
          # newyorker - fiction
          'http://www.newyorker.com/magazine/2017/01/30/quarantine-by-alex-ohlin',
