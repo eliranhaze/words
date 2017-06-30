@@ -85,7 +85,7 @@ class BookmarksUrls(SourceUrls):
             if type(root) == dict:
                 for child in root['children']:
                     if child['type'] == 'folder' and child['name'] in self.sources:
-                        urls.update(bookmark['url'] for bookmark in child['children'])
+                        urls.update(bookmark['url'] for bookmark in child['children'] if bookmark.get('url'))
         return urls
 
     @property
