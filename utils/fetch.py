@@ -30,6 +30,7 @@ CONTENT_TYPES = {
     'text/plain',
     'text/xml',
     'xml',
+    'application/rss+xml',
     'application/json',
 }
 
@@ -81,7 +82,7 @@ class Fetcher(object):
                 logger.debug('response %s size=%.2fkb elapsed=%.1fms',
                     response.url, len(response._content)/1024., response.elapsed.total_seconds() * 1000.)
                 if not _is_ok_content_type(response):
-                    logger.warning('skipping content type %s', response.url)
+                    logger.warning('skipping content type %s (%s)', response.url, response.headers.get('Content-Type'))
                     return
                 if int(response.status_code) == 429:
                     logger.debug('got %s, slowing down', response)
