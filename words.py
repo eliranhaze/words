@@ -37,8 +37,11 @@ def get_extras(words):
     for word in words:
         last = word[-1]
         extras.append(word + 's')
-        extras.append(word + 'ly')
         extras.append(word + 'ness')
+        if word[-2:] == 'ic':
+            extras.append(word + 'ally')
+        else:
+            extras.append(word + 'ly')
         if last == 'y':
             extras.append(word[:-1] + 'ies')
             extras.append(word[:-1] + 'ied')
