@@ -231,7 +231,8 @@ def main():
     main_word = None
     word_rank = None
     if args.trans:
-        main_word = trans(args.trans)
+        word = re.sub('[^a-z]+', '', args.trans.lower())
+        main_word = trans(word)
     if args.rank:
         word = main_word if main_word else args.rank
         word_rank = rank(word)
