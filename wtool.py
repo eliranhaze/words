@@ -235,7 +235,7 @@ def main():
         main_word = trans(word)
     if args.rank:
         word = main_word if main_word else args.rank
-        word_rank = rank(word)
+        word_rank = rank(word.lower())
     if args.exists:
         word = main_word if main_word else args.exists
         isthere = exists(word)
