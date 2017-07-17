@@ -6,6 +6,7 @@ import time
 
 from bs4 import BeautifulSoup as bs
 from datetime import datetime, timedelta
+from urlparse import urlparse
 
 from utils.fetch import fetch, multi_fetch, Fetcher
 from utils.minify import minify_feed, minify_html
@@ -64,14 +65,32 @@ class HtmlUrls(SourceUrls):
         '.wav',
     ]
 
+    def __init__(self, sources):
+        super(HtmlUrls, self).__init__(sources)
+        bases = set()
+        for s in sources:
+            parsed = urlparse(s)
+            bases.add('%s://%s' % (parsed.scheme, parsed.netloc))
+        if len(bases) == 1:
+            self._base_url = bases.pop()
+        else:
+            self._base_url = ''
+            logger.debug('could not determine base url for multiple sources')
+
     def _parse_urls(self, content, from_date=None):
         urls = []
         if content:
             for a in bs(content).find_all('a'):
                 href = a.get('href')
                 if href and not any(href.endswith(suffix) for suffix in self.ignore_suffixes):
-                    urls.append(re.sub('/$', '', href))
+                    urls.append(self._normalize_url(href))
         return urls
+
+    def _normalize_url(self, url):
+        url = re.sub('/$', '', url)
+        if url.startswith('/'):
+            url = '%s%s' % (self._base_url, url)
+        return url
 
 class BookmarksUrls(SourceUrls):
 
@@ -117,7 +136,7 @@ class Source(object):
         all_urls = urls_from_feed.union(urls_from_html).union(self.get_extra_urls())
         if self.bookmarks:
             all_urls = all_urls.union(BookmarksUrls(self.bookmarks).get())
-        logger.info('%s: got %d total urls', self, len(all_urls))
+        logger.info('%s: got %d total urls: %s', self, len(all_urls), all_urls)
         return all_urls
 
     def get_extra_urls(self):
@@ -180,7 +199,13 @@ class NewYorker(Source):
     def urls(self, *args, **kw):
         # some nyer urls are problematic
         urls = super(NewYorker, self).urls(*args, **kw)
-        return set(u.replace('origin.www.newyorker', 'www.newyorker') for u in urls)
+        fixed_urls = []
+        for url in urls:
+            url = url.replace('origin.www.newyorker', 'www.newyorker')
+            if url.startswith('/'):
+                url = 'http://www.newyorker.com%s' % url
+            fixed_urls.append(url)
+        return set(fixed_urls)
 
     def extract(self, soup):
         try:

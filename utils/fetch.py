@@ -110,7 +110,9 @@ class Fetcher(object):
     #==============================================
 
     def fetch(self, url, **kwargs):
+        logger.debug('fetching %s', url)
         if not _is_valid_url(url):
+            logger.debug('url %r is not valid', url)
             return
         params = kwargs.get('params')
         cached = self._get_cached(url, params)
