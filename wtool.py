@@ -9,6 +9,9 @@ from datetime import timedelta
 import words as w
 from utils.fetch import Fetcher
 
+from utils.logger import get_logger
+logger = get_logger('wtool')
+
 wfile = w.WORDFILE
 fetcher = Fetcher(cache=True, cache_ttl=timedelta(days=30))
 
@@ -216,6 +219,29 @@ def _extract(tag):
     return tags[tag.name](tag) if tag.name in tags else ''
 
 #######################################################################################################
+# heb translation
+
+def heb_trans(word):
+    print 'hebrew translation for %r' % word
+    url = 'http://www.morfix.co.il/%s' % word
+    response = fetch(url)
+    soup = bs(response)
+    entries = soup.find_all(attrs={'class':"translation translation_he heTrans"})
+    if entries:
+        for i, trans in enumerate(entries):
+            print '%d. %s' % (i+1, _fix_heb(trans.text))
+    else:
+       print '%r not found' % word
+    print
+
+def _fix_heb(heb):
+    fixed = ''.join(list(reversed(heb))).strip()
+    fixed = fixed.replace('(', ']')
+    fixed = fixed.replace(')', '(')
+    fixed = fixed.replace(']', ')')
+    return fixed
+
+#######################################################################################################
 
 def main():
 
@@ -233,6 +259,7 @@ def main():
     if args.trans:
         word = re.sub('[^a-z]+', '', args.trans.lower())
         main_word = trans(word)
+        heb_trans(word)
     if args.rank:
         word = main_word if main_word else args.rank
         word_rank = rank(word.lower())
