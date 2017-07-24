@@ -15,7 +15,7 @@ logger = get_logger('wtool')
 wfile = w.WORDFILE
 fetcher = Fetcher(cache=True, cache_ttl=timedelta(days=30))
 
-MIN_SUGGEST_RANK = 7000
+MIN_SUGGEST_RANK = 8000
 
 #######################################################################################################
 # utils
