@@ -235,11 +235,20 @@ def heb_trans(word):
     print
 
 def _fix_heb(heb):
-    fixed = ''.join(list(reversed(heb))).strip()
+    groups = [] # each group is a letter and all its punctuation marks
+    for c in heb:
+        if _is_punct(c):
+            groups[-1] += c
+        else:
+            groups.append(c)
+    fixed = ''.join(list(reversed(groups))).strip() # reverse the order of the groups
     fixed = fixed.replace('(', ']')
     fixed = fixed.replace(')', '(')
     fixed = fixed.replace(']', ')')
     return fixed
+
+def _is_punct(heb_char):
+    return 1455 < ord(heb_char) < 1488
 
 #######################################################################################################
 
