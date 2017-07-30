@@ -222,7 +222,7 @@ def _extract(tag):
 # heb translation
 
 def heb_trans(word):
-    print 'hebrew translation for %r' % word
+    print '%r in hebrew:' % word
     url = 'http://www.morfix.co.il/%s' % word
     response = fetch(url)
     soup = bs(response)
@@ -242,10 +242,15 @@ def _fix_heb(heb):
         else:
             groups.append(c)
     fixed = ''.join(list(reversed(groups))).strip() # reverse the order of the groups
-    fixed = fixed.replace('(', ']')
-    fixed = fixed.replace(')', '(')
-    fixed = fixed.replace(']', ')')
+    fixed = _swap(fixed, '[', ']')
+    fixed = _swap(fixed, '(', ')')
     return fixed
+
+def _swap(st, a, b):
+    tmp = '$#@'
+    st = st.replace(a, tmp)
+    st = st.replace(b, a)
+    return st.replace(tmp, b)
 
 def _is_punct(heb_char):
     return 1455 < ord(heb_char) < 1488
