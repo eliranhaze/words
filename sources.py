@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup as bs
 from datetime import datetime, timedelta
 from urlparse import urlparse
 
-from utils.fetch import fetch, multi_fetch, Fetcher
+from utils.fetch import fetch, Fetcher
 from utils.minify import minify_feed, minify_html
 from utils.text import extract_text
 
@@ -223,6 +223,14 @@ class NewYorker(Source):
                 if href and 'contributors' not in href:
                     urls.add(href.replace('?intcid=popular', '?mbid=rss'))
         return urls
+
+    def _filter(self, urls):
+        return [
+            u for u in urls if not (
+                u.startswith('http://video') or
+                'cartoons/daily-cartoon/' in u or
+                '.com/podcast/' in u)
+        ]
 
 class TheGuardian(Source):
     FEEDS = [
