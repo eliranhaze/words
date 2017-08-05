@@ -85,17 +85,20 @@ class Fetcher(object):
                     logger.warning('skipping content type %s (%s)', response.url, response.headers.get('Content-Type'))
                     return
                 if int(response.status_code) == 429:
-                    logger.debug('got %s, slowing down', response)
+                    logger.debug('got %s, slowing down %s', response, url)
                     time.sleep(attempt)
                     continue
+                if not response.ok:
+                    logger.warning('response %s not ok: status code %d', response.url, response.status_code)
                 return response
             except requests.exceptions.ConnectionError, e:
-                logger.error('got error (%d): %r' % (attempt, e))
+                logger.error('got error %s (%d): %r' % (url, attempt, e))
                 time.sleep(attempt)
-            except requests.exceptions.TooManyRedirects:
+            except requests.exceptions.TooManyRedirects, e:
+                logger.error('got error %s (%d): %r' % (url, attempt, e))
                 return
             except Exception, e:
-                logger.error('unhandled (%d): %r' % (attempt, e))
+                logger.error('unhandled %s (%d): %r' % (url, attempt, e))
                 return
 
     def _get_cached(self, url, params=None):
@@ -126,7 +129,7 @@ class Fetcher(object):
             return Response(url=response.url, content=content)
         logger.warning('fetch: got none (url=%s)' % url)
 
-    def multi_fetch(self, urls, timeout=120, **kwargs):
+    def multi_fetch(self, urls, timeout=300, **kwargs):
         task = lambda url: self.fetch(url, **kwargs)
         return self.executor.execute(task, urls, timeout)
 
