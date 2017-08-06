@@ -71,6 +71,8 @@ DATA_SOURCES = {
          'http://www.nybooks.com/articles/2015/12/03/satan-salem/',
          'http://www.nybooks.com/articles/2016/08/18/mystery-of-hieronymus-bosch/',
          'http://www.nybooks.com/articles/2016/09/29/hobbes-spinoza-locke-leibniz-hume-wrestled-new/',
+         'http://www.nybooks.com/daily/2017/07/01/iraq-the-battle-to-come/',
+         'http://www.nybooks.com/articles/2017/06/22/israels-irrational-rationality/',
 
          # ny times
          'https://www.nytimes.com/2017/02/24/style/modern-love-when-your-greatest-romance-is-friendship.html',
