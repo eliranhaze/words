@@ -54,6 +54,9 @@ DATA_SOURCES = {
          'http://www.newyorker.com/magazine/2013/10/28/now-we-are-five',
          'http://www.newyorker.com/magazine/2008/05/05/letting-go',
          'http://www.newyorker.com/culture/culture-desk/untamed-animal-friends',
+         'http://www.newyorker.com/magazine/2010/04/19/the-ice-balloon',
+         'http://www.newyorker.com/magazine/2013/12/16/the-lost-world-2',
+         'http://www.newyorker.com/magazine/2014/05/05/prescription-for-disaster',
 
          # newyorker - fiction
          'http://www.newyorker.com/magazine/2017/01/30/quarantine-by-alex-ohlin',
@@ -61,12 +64,15 @@ DATA_SOURCES = {
          'http://www.newyorker.com/magazine/2017/01/09/on-the-street-where-you-live',
          'http://www.newyorker.com/magazine/2004/03/22/passion-8',
          'http://www.newyorker.com/magazine/2009/04/13/the-color-of-shadows',
+         'http://www.newyorker.com/magazine/2017/06/05/clean-cleaner-cleanest',
 
          # ny books
          'http://www.nybooks.com/articles/2016/05/26/our-awful-prisons-how-they-can-be-changed/',
          'http://www.nybooks.com/articles/2015/12/03/satan-salem/',
          'http://www.nybooks.com/articles/2016/08/18/mystery-of-hieronymus-bosch/',
          'http://www.nybooks.com/articles/2016/09/29/hobbes-spinoza-locke-leibniz-hume-wrestled-new/',
+         'http://www.nybooks.com/daily/2017/07/01/iraq-the-battle-to-come/',
+         'http://www.nybooks.com/articles/2017/06/22/israels-irrational-rationality/',
 
          # ny times
          'https://www.nytimes.com/2017/02/24/style/modern-love-when-your-greatest-romance-is-friendship.html',
