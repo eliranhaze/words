@@ -46,6 +46,7 @@ def get_extras(words):
             extras.append(word[:-1] + 'ies')
             extras.append(word[:-1] + 'ied')
             extras.append(word[:-1] + 'iness')
+            extras.append(word[:-1] + 'ily')
             extras.append(word + 'ing')
         elif last == 'e':
             extras.append(word + 'd')
