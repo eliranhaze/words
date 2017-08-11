@@ -62,7 +62,6 @@ def get_extras(words):
         elif word[-2:] == 'ce':
             extras.append(word[:-2] + 't')
         if word[-2:] == 'ze':
-            print 'appending', (word[:-1] + 'ation')
             extras.append(word[:-1] + 'ation')
     return extras
 
