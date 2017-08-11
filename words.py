@@ -40,6 +40,8 @@ def get_extras(words):
         extras.append(word + 'ness')
         if word[-2:] == 'ic':
             extras.append(word + 'ally')
+        elif word[-2:] == 'le':
+            extras.append(word[:-1] + 'y')
         else:
             extras.append(word + 'ly')
         if last == 'y':
