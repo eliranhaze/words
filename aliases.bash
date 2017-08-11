@@ -40,6 +40,15 @@ function wbookmarks() {
     python main.py --bookmarks "$1" --console
 }
 
+function wfeed() {
+    if [ $2 ]; then
+       hours="--hours $2"
+    else
+       hours=""
+    fi
+    python main.py --sources "$1" --console $hours
+}
+
 alias bd="vi brains/data.py && git add brains/data.py && git commit -m 'training data update' && git push"
 
 
