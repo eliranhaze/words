@@ -73,9 +73,9 @@ class HtmlUrls(SourceUrls):
             bases.add('%s://%s' % (parsed.scheme, parsed.netloc))
         if len(bases) == 1:
             self._base_url = bases.pop()
-        else:
+        elif len(bases) > 1:
             self._base_url = ''
-            logger.debug('could not determine base url for multiple sources')
+            logger.debug('could not determine base url for multiple sources, bases = %s', bases)
 
     def _parse_urls(self, content, from_date=None):
         urls = []
