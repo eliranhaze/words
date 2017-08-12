@@ -273,6 +273,9 @@ def main():
     if args.trans:
         word = re.sub('[^a-z]+', '', args.trans.lower())
         main_word = trans(word)
+        if not main_word:
+            # word not found
+            return
         heb_trans(word)
     if args.rank:
         word = main_word if main_word else args.rank
