@@ -57,6 +57,7 @@ DATA_SOURCES = {
          'http://www.newyorker.com/magazine/2010/04/19/the-ice-balloon',
          'http://www.newyorker.com/magazine/2013/12/16/the-lost-world-2',
          'http://www.newyorker.com/magazine/2014/05/05/prescription-for-disaster',
+         'http://www.newyorker.com/news/news-desk/the-end-of-this-road-the-decline-of-the-palestinian-national-movement',
 
          # newyorker - fiction
          'http://www.newyorker.com/magazine/2017/01/30/quarantine-by-alex-ohlin',
