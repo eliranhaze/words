@@ -237,7 +237,7 @@ def heb_trans(word):
 def _fix_heb(heb):
     groups = [] # each group is a letter and all its punctuation marks
     for c in heb:
-        if _is_punct(c):
+        if _is_punct(c) or c.isdigit():
             groups[-1] += c
         else:
             groups.append(c)
