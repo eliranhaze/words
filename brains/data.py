@@ -76,6 +76,7 @@ DATA_SOURCES = {
          'http://www.nybooks.com/daily/2017/07/01/iraq-the-battle-to-come/',
          'http://www.nybooks.com/articles/2017/06/22/israels-irrational-rationality/',
          'http://www.nybooks.com/articles/2017/08/17/henry-david-thoreau-true-american/',
+         'http://www.nybooks.com/articles/2013/02/21/speak-memory/',
 
          # ny times
          'https://www.nytimes.com/2017/02/24/style/modern-love-when-your-greatest-romance-is-friendship.html',
