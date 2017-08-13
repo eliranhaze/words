@@ -237,7 +237,7 @@ def heb_trans(word):
 def _fix_heb(heb):
     groups = [] # each group is a letter and all its punctuation marks
     for c in heb:
-        if _is_punct(c) or c.isdigit():
+        if groups and (_is_punct(c) or c.isdigit() or _is_latin(c)):
             groups[-1] += c
         else:
             groups.append(c)
@@ -254,6 +254,9 @@ def _swap(st, a, b):
 
 def _is_punct(heb_char):
     return 1455 < ord(heb_char) < 1488
+
+def _is_latin(c):
+    return c.lower() != c.upper()
 
 #######################################################################################################
 
