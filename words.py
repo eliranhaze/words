@@ -55,7 +55,7 @@ def get_extras(words):
             extras.append(word + 's')
             extras.append(word[:-1] + 'ing')
             extras.append(word[:-1] + 'ial')
-            if word[-2:] == 'te':
+            if word[-2:] in ('te', 'se'):
                 extras.append(word[:-1] + 'ion')
         else:
             extras.append(word + 'ed')

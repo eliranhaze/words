@@ -28,6 +28,7 @@ def get_args():
     parser.add_argument('--rank', dest='rank')
     parser.add_argument('--trans', dest='trans')
     parser.add_argument('--check', dest='check', action='store_true')
+    parser.add_argument('--autoremove', dest='autoremove', action='store_true')
     args = parser.parse_args()
     if not any(vars(args).values()):
         parser.error('args required')
@@ -115,9 +116,17 @@ def rank(word):
 def check():
     words = read_file()
     extras = set(w.get_extras(words))
+    redundant = []
     for word in words:
         if word in extras:
+            redundant.append(word)
             print '%r is in extras' % word
+    return redundant
+
+def autoremove():
+    redundant = check()
+    for word in redundant:
+        remove(word)
     
 #######################################################################################################
 # translation
@@ -270,6 +279,8 @@ def main():
         remove(args.remove)
     elif args.check:
         check()
+    elif args.autoremove:
+        autoremove()
 
     main_word = None
     word_rank = None
