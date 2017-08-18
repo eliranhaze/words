@@ -5,7 +5,7 @@ import time
 
 from datetime import datetime, timedelta
 
-from sources import get_sources, Source
+from sources import Source
 from words import full_report, _wordify
 
 # suppress warnings
@@ -88,7 +88,7 @@ def main():
 
     args = get_args()
 
-    sources = get_sources(args.sources)
+    sources = Source.get_sources(args.sources)
     from_date = (datetime.utcnow() - timedelta(hours=args.hours)) if args.hours else None
 
     if args.feed:

@@ -2,6 +2,8 @@ import argparse
 from datetime import timedelta
 
 import words
+from sources import Source
+
 from utils.fetch import Fetcher
 from utils.minify import minify_html
 from utils.text import extract_text
@@ -40,7 +42,7 @@ def main():
         print 'fetching text from', args.url
         response = fetcher.fetch(args.url, verify=False)
         if response:
-            text = textify_web_content(response.content)
+            text = Source.get_source_of(args.url).extract_content(response.content)
     elif args.file:
         print 'reading file', args.file
         text = open(args.file).read()

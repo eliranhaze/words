@@ -116,6 +116,7 @@ class BookmarksUrls(SourceUrls):
 
 class Source(object):
 
+    HOST = None
     FEEDS = []
     LINKS_PAGES = []
     bookmarks = []
@@ -129,6 +130,24 @@ class Source(object):
             self.LINKS_PAGES = links_pages
         if bookmarks:
             self.bookmarks = bookmarks
+
+    @classmethod
+    def get_sources(cls, sources=None):
+        if sources:
+            sources = [s.lower() for s in sources]
+            condition = lambda c: c.__name__.lower() in sources
+        else:
+            condition = lambda c: True
+        return [s() for s in cls.__subclasses__() if condition(s)]
+
+    @classmethod
+    def get_source_of(cls, url):
+        host = urlparse(url).netloc
+        if host:
+            for source in cls.get_sources():
+                if host == source.HOST:
+                    return source
+        return cls()
 
     def urls(self, from_date=None):
         urls_from_feed = FeedUrls(self.FEEDS).get(from_date=from_date)
@@ -162,8 +181,11 @@ class Source(object):
     def _extra_minify(self, content):
         return content
 
+    def extract_content(self, content):
+        return self.extract(bs(content))
+
     def extract(self, soup):
-        return extract_text(element=soup)
+        return extract_text(element=self._main_element(soup))
 
     def _main_element(self, soup):
         return soup
@@ -175,6 +197,7 @@ class Source(object):
         return self.__class__.__name__
 
 class NewYorker(Source):
+    HOST = 'www.newyorker.com'
     FEEDS = [
         'http://www.newyorker.com/feed/everything',
         'http://www.newyorker.com/feed/articles',
@@ -233,6 +256,7 @@ class NewYorker(Source):
         ]
 
 class TheGuardian(Source):
+    HOST = 'www.theguardian.com'
     FEEDS = [
         'https://www.theguardian.com/uk/rss',
         'https://www.theguardian.com/world/rss',
@@ -245,6 +269,7 @@ class TheGuardian(Source):
         return [u for u in urls if '/sport/live' not in u]
 
 class NyTimes(Source):
+    HOST = 'www.nytimes.com'
     FEEDS = [
         'http://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml',
         'http://rss.nytimes.com/services/xml/rss/nyt/World.xml',
@@ -283,6 +308,7 @@ class NyTimes(Source):
         return content
 
 class NyBooks(Source):
+    HOST = 'www.nybooks.com'
     FEEDS = [
         'http://feeds.feedburner.com/nybooks',
     ]
@@ -294,6 +320,7 @@ class NyBooks(Source):
             return soup
 
 class TheAtlantic(Source):
+    HOST = 'www.theatlantic.com'
     FEEDS = [
         'http://www.theatlantic.com/feed/all/',
         'http://www.theatlantic.com/feed/best-of/',
@@ -322,6 +349,7 @@ class TheAtlantic(Source):
         return [u for u in urls if '/notes/' not in u]
 
 class TheEconomist(Source):
+    HOST = 'www.economist.com'
     FEEDS = [
         'http://www.economist.com/feeds/print-sections/all/all.xml',
         'http://www.economist.com/sections/business-finance/rss.xml',
@@ -340,6 +368,7 @@ class TheEconomist(Source):
         return [u for u in urls if '/blogs/erasmus' not in u]
 
 class _3AM(Source):
+    HOST = 'www.3ammagazine.com'
     FEEDS = [
         'http://www.3ammagazine.com/3am/feed/',
         'http://www.3ammagazine.com/3am/index/buzzwords/feed/',
@@ -349,17 +378,14 @@ class _3AM(Source):
         'http://www.3ammagazine.com/3am/index/nonfiction/feed/',
     ]
 
-class DailyNous(Source):
-    FEEDS = [
-        'http://dailynous.com/feed/',
-    ]
-
 class LondonBooks(Source):
+    HOST = 'www.lrb.co.uk'
     FEEDS = [
         'http://cdn.lrb.co.uk/feeds/lrb',
     ]
 
 class LABooks(Source):
+    HOST = 'lareviewofbooks.org'
     FEEDS = [
         'https://lareviewofbooks.org/feed',
         'http://feeds.feedburner.com/themarginaliareview/XRIC',
@@ -370,6 +396,7 @@ class LABooks(Source):
     ]
 
 class WashingtonPost(Source):
+    HOST = 'www.washingtonpost.com'
     FEEDS = [
         'http://feeds.washingtonpost.com/rss/politics',
         'http://feeds.washingtonpost.com/rss/local',
@@ -379,11 +406,13 @@ class WashingtonPost(Source):
     ]
 
 class Aeon(Source):
+    HOST = 'aeon.co'
     FEEDS = [
         'https://aeon.co/feed.rss',
     ]
 
 class ScientificAmerican(Source):
+    HOST = 'www.scientificamerican.com'
     FEEDS = [
         # main
         'http://rss.sciam.com/ScientificAmerican-Global',
@@ -417,10 +446,3 @@ class ScientificAmerican(Source):
         'http://rss.sciam.com/rosetta-stones/feed',
     ]
 
-def get_sources(sources=None):
-    if sources:
-        sources = [s.lower() for s in sources]
-        condition = lambda cls: cls.__name__.lower() in sources
-    else:
-        condition = lambda cls: True
-    return [s() for s in Source.__subclasses__() if condition(s)]
