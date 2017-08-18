@@ -317,7 +317,10 @@ class NyBooks(Source):
 
     def _main_element(self, soup):
         try:
-            return soup.findAll('article', attrs={'class': 'article'})[0]
+            fn = soup.find('div', attrs={'class': 'footnotes'})
+            if fn:
+                fn.decompose()
+            return soup.find('section', attrs={'class': 'article_body'})
         except:
             return soup
 
