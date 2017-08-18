@@ -83,7 +83,9 @@ class HtmlUrls(SourceUrls):
             for a in bs(content).find_all('a'):
                 href = a.get('href')
                 if href and not any(href.endswith(suffix) for suffix in self.ignore_suffixes):
-                    urls.append(self._normalize_url(href))
+                    url = self._normalize_url(href)
+                    if url.startswith(self._base_url):
+                        urls.append(url)
         return urls
 
     def _normalize_url(self, url):
