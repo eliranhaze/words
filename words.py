@@ -8,7 +8,7 @@ logger = get_logger('words')
 WORDFILE = 'wlist'
 WPM = 125.
 READING_LEN_EXP = 1.
-MAX_WORD_REPEAT = 3
+MAX_WORD_REPEAT = 2
 
 PRINT_WORDS = False
 PRINT_OUT = 'words.out'
