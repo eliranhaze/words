@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup as bs
 
-MIN_BIT_SIZE = 75
+MIN_BIT_SIZE = 50
 
 def extract_text(html=None, element=None):
     if element is None:
