@@ -131,6 +131,8 @@ class Report(object):
         print '- reading time: %s' % self.reading_time
 
         if self.list_words:
+            print 'TEXT'
+            print ' '.join(self.text_words)
             print '- found words:'
             for f in self.found:
                 print '-- %s' % f
