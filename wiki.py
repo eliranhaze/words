@@ -16,7 +16,7 @@ def _print_wrap(x, char='='):
     print line
 
 entry = sys.argv[1]
-print 'looking for %s...' % entry
+print 'looking up %s...' % entry
 url = '%s/%s' % (ENDPOINT, entry.replace(' ','_'))
 response = fetcher.fetch(url)
 
