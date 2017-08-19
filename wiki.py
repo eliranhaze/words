@@ -2,10 +2,12 @@ import re
 import sys
 from bs4 import BeautifulSoup as bs
 
-from utils.fetch import fetch
+from utils.fetch import Fetcher
 
 ENDPOINT = 'https://en.wikipedia.org/wiki'
 MIN_TEXT_LEN = 100
+
+fetcher = Fetcher(cache=False)
 
 def _print_wrap(x, char='='):
     line = char * len(x)
@@ -16,7 +18,12 @@ def _print_wrap(x, char='='):
 entry = sys.argv[1]
 print 'looking for %s...' % entry
 url = '%s/%s' % (ENDPOINT, entry.replace(' ','_'))
-response = fetch(url)
+response = fetcher.fetch(url)
+
+if not response:
+    print '%s not found' % entry
+    sys.exit(-1)
+
 soup = bs(response.content)
 
 # remove tables
