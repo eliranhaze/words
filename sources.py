@@ -253,8 +253,8 @@ class NewYorker(Source):
         return [
             u for u in urls if not (
                 u.startswith('http://video') or
-                'cartoons/daily-cartoon/' in u or
-                '.com/podcast/' in u)
+                'cartoons/daily-cartoon' in u or
+                '.com/podcast' in u)
         ]
 
 class TheGuardian(Source):

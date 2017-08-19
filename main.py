@@ -96,7 +96,9 @@ def main():
         sources = [Source(feeds=[args.feed])]
     if args.links:
         source_str = str(args.links)
-        sources = [Source(links_pages=[args.links])]
+        source = Source.get_source_of(args.links).__class__(links_pages=[args.links])
+        source.FEEDS = []
+        sources = [source]
     if args.bookmarks:
         source_str = 'bookmarks: %s' % args.bookmarks
         sources = [Source(bookmarks=[args.bookmarks])]
