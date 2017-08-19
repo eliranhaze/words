@@ -49,6 +49,10 @@ function wfeed() {
     python main.py --sources "$1" --console $hours
 }
 
+function wiki() {
+    python wiki.py "$1"
+}
+
 alias bd="vi brains/data.py && git add brains/data.py && git add *.pkl && git commit -m 'training data update' && git push"
 
 
