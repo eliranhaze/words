@@ -7,23 +7,29 @@ from utils.fetch import fetch
 ENDPOINT = 'https://en.wikipedia.org/wiki'
 MIN_TEXT_LEN = 100
 
+def _print_wrap(x, char='='):
+    line = char * len(x)
+    print line
+    print x
+    print line
+
 entry = sys.argv[1]
-print 'looking for', entry
-entry = entry.replace(' ','_')
-url = '%s/%s' % (ENDPOINT, entry)
-print 'fetching', url
+print 'looking for %s...' % entry
+url = '%s/%s' % (ENDPOINT, entry.replace(' ','_'))
 response = fetch(url)
-print 'got response'
 soup = bs(response.content)
 
-print 'parsing...'
 # remove tables
 [t.decompose() for t in soup.find_all('table')]
+
+# find title
+title = soup.find(attrs={'id': 'firstHeading'}).text
 
 # find text
 for p in soup.find(attrs={'id': 'bodyContent'}).find_all('p'):
     if len(p.text) >= MIN_TEXT_LEN:
         # remove footnotes
         text = re.sub('\[[a-z 0-9]+\]', '', p.text)
+        _print_wrap(title)
         print text
         break
