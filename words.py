@@ -67,6 +67,8 @@ def get_extras(words):
             extras.append(word[:-2] + 't')
         if word[-2:] == 'ze':
             extras.append(word[:-1] + 'ation')
+        if word[-3:] == 'ism':
+            extras.append(word[:-1] + 't')
     return extras
 
 def find_words(text_words):
