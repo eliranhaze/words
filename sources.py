@@ -320,9 +320,14 @@ class NyBooks(Source):
             fn = soup.find('div', attrs={'class': 'footnotes'})
             if fn:
                 fn.decompose()
-            return soup.find('section', attrs={'class': 'article_body'})
+            main = soup.find(attrs={'class': 'article_body'})
+            if not main:
+                main = soup.find(attrs={'class': 'blog_post_body'})
+            if main:
+                return main
         except:
-            return soup
+            pass
+        return soup
 
 class TheAtlantic(Source):
     HOST = 'www.theatlantic.com'
