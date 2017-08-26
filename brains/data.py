@@ -106,6 +106,10 @@ DATA_SOURCES = {
          'http://www.dailymail.co.uk/debate/article-1220756/A-strange-lonely-troubling-death--.html',
          'http://www.dailymail.co.uk/debate/article-1224858/Yes-scientists-good-But-country-run-arrogant-gods-certainty-truly-hell-earth.html',
          'http://www.dailymail.co.uk/femail/article-3982918/A-charming-story-UK-s-popular-jewellery-brand-Pandora-went-small-family-business-11-5-BILLION-empire-celebs-t-it.html',
+         'http://www.dailymail.co.uk/tvshowbiz/article-4824700/Paris-Hilton-shows-two-story-doggy-mansion.html',
+         'http://www.dailymail.co.uk/tvshowbiz/article-4824732/Lisa-Riley-reveals-battle-shed-STONE-loose-skin.html',
+         'http://www.dailymail.co.uk/tvshowbiz/article-4821164/Jenna-Coleman-keeps-coy-engagement-rumours.html',
+         'http://www.dailymail.co.uk/tvshowbiz/article-4818230/Jeremy-Meeks-estranged-wife-Melissa-posts-thong-selfie.html',
          'https://www.psychologytoday.com/blog/sex-murder-and-the-meaning-life/201612/does-trump-s-election-disprove-the-existence-god',
          'https://www.marxists.org/reference/subject/philosophy/works/fr/derrida.htm',
          'https://www.marxists.org/reference/subject/philosophy/works/ge/heidegge.htm',
@@ -141,6 +145,7 @@ DATA_SOURCES = {
          'http://awdude.com/will-conservatives-quit-supporting-leftist-tv-netorks-social-media/',
          'http://awdude.com/ayatollah-spikes-football-on-obamas-face/',
          'http://awdude.com/google-will-now-filter-internet-hate-speech/',
+         'http://www.thedailybeast.com/paula-deen-teflon-chef',
     ],
 }
 
