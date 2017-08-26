@@ -60,6 +60,7 @@ DATA_SOURCES = {
          'http://www.newyorker.com/news/news-desk/the-end-of-this-road-the-decline-of-the-palestinian-national-movement',
          'http://www.newyorker.com/books/page-turner/the-mystery-of-s-the-man-with-an-impossible-memory',
          'http://www.newyorker.com/news/daily-comment/why-does-donald-trump-like-sheriff-joe',
+         'http://www.newyorker.com/magazine/2007/09/03/the-jefferson-bottles',
 
          # newyorker - fiction
          'http://www.newyorker.com/magazine/2017/01/30/quarantine-by-alex-ohlin',
