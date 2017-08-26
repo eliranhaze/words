@@ -118,6 +118,8 @@ class Fetcher(object):
 
     def fetch(self, url, **kwargs):
         logger.debug('fetching %s', url)
+        if not _is_valid_url(url) and _is_valid_url('http://' + url):
+            url = 'http://' + url
         if not _is_valid_url(url):
             logger.debug('url %r is not valid', url)
             return
