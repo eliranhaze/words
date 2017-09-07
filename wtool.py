@@ -297,7 +297,7 @@ def main():
     if args.exists:
         word = main_word if main_word else args.exists
         isthere = exists(word)
-        if main_word and args.exists != main_word:
+        if main_word and args.exists.lower() != main_word.lower():
             exists(args.exists)
         if not isthere and word_rank is not None and word_rank <= MIN_SUGGEST_RANK:
             suggest_add(word)
