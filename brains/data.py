@@ -62,6 +62,7 @@ DATA_SOURCES = {
          'http://www.newyorker.com/news/daily-comment/why-does-donald-trump-like-sheriff-joe',
          'http://www.newyorker.com/magazine/2007/09/03/the-jefferson-bottles',
          'https://www.newyorker.com/magazine/2017/09/18/the-case-against-civilization',
+         'https://www.newyorker.com/magazine/2009/09/07/trial-by-fire',
 
          # newyorker - fiction
          'http://www.newyorker.com/magazine/2017/01/30/quarantine-by-alex-ohlin',
