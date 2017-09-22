@@ -82,6 +82,7 @@ DATA_SOURCES = {
          'http://www.nybooks.com/articles/2017/08/17/henry-david-thoreau-true-american/',
          'http://www.nybooks.com/articles/2013/02/21/speak-memory/',
          'http://www.nybooks.com/articles/2001/04/12/southern-comfort/',
+         'http://www.nybooks.com/articles/2017/09/28/donald-trump-impeachable-offenses/',
 
          # ny times
          'https://www.nytimes.com/2017/02/24/style/modern-love-when-your-greatest-romance-is-friendship.html',
