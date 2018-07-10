@@ -165,6 +165,7 @@ class Cache(object):
     def create_entry_path(self, entry):
         with self.lock:
             with open(self.metafile, 'a+') as f:
+                f.seek(0) # move to start of file for reading
                 lines = f.read().splitlines()
                 name = int(lines[-1].split(self.sep)[-1])+1 if lines else 0
                 f.write('%s%s%s\n' % (entry, self.sep, name))
