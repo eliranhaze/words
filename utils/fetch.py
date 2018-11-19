@@ -116,7 +116,7 @@ class Fetcher(object):
     # main functions 
     #==============================================
 
-    def fetch(self, url, **kwargs):
+    def fetch(self, url, save_condition = None, **kwargs):
         logger.debug('fetching %s', url)
         if not _is_valid_url(url) and _is_valid_url('http://' + url):
             url = 'http://' + url
@@ -131,7 +131,8 @@ class Fetcher(object):
         if response:
             content = self.processor(response.content) if self.processor else response.content
             if self.cache:
-                self.cache.put(content, url, params)
+                if not save_condition or save_condition(content):
+                    self.cache.put(content, url, params)
             return Response(url=response.url, content=content)
         logger.warning('fetch: got none (url=%s)' % url)
 
